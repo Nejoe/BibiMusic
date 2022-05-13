@@ -3,26 +3,21 @@
     <el-header>
       <nav-bar></nav-bar>
     </el-header>
-    <el-main>
+    <el-main v-loading="loading">
       <div class="main">
         <div class="playlist" v-for="(item, index) in playlist" :key="index">
           <div class="title">
             <h2>{{ item.playlistTitle }}</h2>
-            <span>查看全部</span>
+            <el-button @click="goPlaylistDetail(item.id)">查看全部</el-button>
           </div>
           <ul class="list">
-            <li
-              class="item"
-              @click="playMusic(song.id)"
-              v-for="song in item.musicList"
-              :key="song.id"
-            >
+            <li class="item" @click="goMusicDetail(song.id)" v-for="song in item.musicList" :key="song.id">
               <div class="cover">
-                <img :src="song.cover" alt="歌曲封面" />
-              </div>
-              <!-- <button class="play">
+                <img :src="song.cover" alt="" />
+                <button class="play" @click.stop="playMusic(song.id)">
                   <i class="el-icon-caret-right"></i>
-                </button> -->
+                </button>
+              </div>
               <span>{{ song.name }}</span>
             </li>
           </ul>
@@ -39,8 +34,12 @@ export default {
   components: { NavBar },
   data() {
     return {
+      loading: true,
+      showPlayBtn: false,
+      songLimit: 6,
       //歌单列表数据
-      playlist: [
+      playlist: [],
+      playlistTest: [
         {
           playlistTitle: "热门歌曲",
           musicList: [
@@ -48,31 +47,31 @@ export default {
               id: 1,
               name: "バッグパイパー",
               cover:
-                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg?param=130y130",
+                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg",
             },
             {
               id: 2,
               name: "空っぽの空に潰される",
               cover:
-                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg?param=130y130",
+                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg",
             },
             {
               id: 3,
               name: "Rap God",
               cover:
-                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg?param=130y130",
+                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg",
             },
             {
               id: 4,
               name: "BiBiC HEART",
               cover:
-                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg?param=130y130",
+                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg",
             },
             {
               id: 5,
               name: "The 89's Momentum",
               cover:
-                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg?param=130y130",
+                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg",
             },
           ],
         },
@@ -83,19 +82,19 @@ export default {
               id: 1,
               name: "バッグパイパー",
               cover:
-                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg?param=130y130",
+                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg",
             },
             {
               id: 4,
               name: "BiBiC HEART",
               cover:
-                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg?param=130y130",
+                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg",
             },
             {
               id: 5,
               name: "The 89's Momentum",
               cover:
-                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg?param=130y130",
+                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg",
             },
           ],
         },
@@ -106,7 +105,7 @@ export default {
               id: 2,
               name: "空っぽの空に潰される",
               cover:
-                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg?param=130y130",
+                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg",
             },
           ],
         },
@@ -117,7 +116,7 @@ export default {
               id: 3,
               name: "Rap God",
               cover:
-                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg?param=130y130",
+                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg",
             },
           ],
         },
@@ -125,9 +124,35 @@ export default {
     };
   },
   methods: {
-    ...mapActions({ playMusic: "setCurrentSong" }),
+    ...mapActions({ playMusic: "changeCurrentSong" }),
+    goMusicDetail(id) {
+      this.$router.push({
+        name: "Music",
+        params: { id },
+      });
+    },
+    goPlaylistDetail(id) {
+      this.$router.push({
+        name: "Playlist",
+        params: { id },
+      });
+    },
   },
-  computed: {},
+  mounted() {
+    // 获取部分歌单来展示
+    this.$axios({
+      url: "/playlist/getDiscoverPlaylist",
+      method: "GET",
+      params: {
+        page: 1,
+        pageSize: 10,
+        songLimit: this.songLimit,
+      },
+    }).then((res) => {
+      this.playlist = res.data.obj;
+      this.loading = false;
+    });
+  },
 };
 </script>
 <style>
@@ -137,68 +162,94 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .playlist {
   margin-bottom: 25px;
 }
+
 .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
+
 .list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .item {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  margin-right: 30px;
+  margin: 0 20px 30px 0;
   width: 180px;
   height: 230px;
-  background-color: #181818;
+  background-color: #EBEEF5;
+  border: 1px solid #DCDFE6;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
+.item>span {
+  text-align: center;
+  max-width: 160px;
+}
+
 .item:hover {
-  background-color: #282828;
+  background-color: #DCDFE6;
 }
-.item:hover > .cover {
+
+.item:hover>.cover {
   /* 边框暗阴影 */
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
+
+.item:hover :nth-child(2) {
+  visibility: visible;
+  /* display: block; */
+  opacity: 1;
+}
+
 .cover {
-  /* position: relative; */
+  position: relative;
   /* padding: 10px; */
   width: 150px;
   height: 150px;
   border-radius: 5px;
   overflow: hidden;
 }
-.cover > img {
+
+.cover img {
   width: 100%;
   height: 100%;
 }
+
 .play {
-  /* position:relative ;
-  bottom: 20px;
-  right: 20px; */
+  visibility: hidden;
+  /* display: none; */
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
   width: 30px;
   height: 30px;
   border: none;
   border-radius: 50%;
-  background-color: #1fdf64;
-  transition: all 0.1s ease;
+  background-color: #409eff;
+  transition: all 0.2s ease-in-out;
   translate: 50px;
+  opacity: 0;
 }
+
 .play:hover {
-  bottom: 17px;
-  right: 17px;
-  width: 35px;
-  height: 35px;
+  bottom: 7px;
+  right: 7px;
+  width: 36px;
+  height: 36px;
 }
 </style>

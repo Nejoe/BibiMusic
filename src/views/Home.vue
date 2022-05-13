@@ -1,16 +1,14 @@
 <template>
   <div class="home">
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="225px">
         <div class="logo">
           <h1>BiBiMusic</h1>
         </div>
         <el-menu
           router
           :default-active="$router.currentRoute.path"
-          background-color="#000000"
-          text-color="#b3b3b3"
-          active-text-color="#FFFFFF"
+          background-color="#FFFFFF"
         >
           <el-menu-item index="/discover" active-class="active">
             <i class="el-icon-s-shop"></i>
@@ -44,12 +42,7 @@ export default {
   },
   methods: {
     mounted() {
-      // this.$axios({
-      //   url: "http://music.163.com/api/song/media?id=1485777161",
-      //   method: "get",
-      // }).then((res) => {
-      //   console.log(res);
-      // });
+
     },
   },
 };
@@ -61,26 +54,34 @@ export default {
 }
 .logo {
   width: 100%;
+  height: 60px;
+  line-height: 60px;
   text-align: center;
 }
 .el-aside {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   width: auto;
-  background: #000000;
-  color: white;
+  background: #FFFFFF;
+  color: #303133;
+  border-right:1px solid #E4E7ED;
+  /* color: white; */
 }
 .el-header {
   position: sticky;
   top: 0;
   width: 100%;
   height: 60px;
-  background: #070707;
-  color: white;
+  border-bottom: 1px solid #DCDFE6;
+  background: #FFFFFF;
+  /* color: white; */
+  z-index: 2;
 }
 .el-main {
   padding: 0 !important;
-  color: white;
-  background-color: #121212;
+  color: #303133;
+  background-color: #FAFAFA;
 }
 .el-container {
   padding-bottom: 90px;
@@ -89,11 +90,8 @@ export default {
 .el-menu {
   border-right: none !important;
 }
-.el-menu-item:hover > i,
-.el-menu-item:hover > span {
-  color: #ffffff;
-}
-li {
-  list-style: none;
+.el-menu-item {
+  height: 50px !important;
+  line-height: 50px !important;
 }
 </style>

@@ -1,79 +1,145 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+// 设置axios的基础路径
+axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export default new Vuex.Store({
     state: {
         currentSong: {
-            title: "Rap God",
-            artist: "Eminem",
-            src: "https://music.163.com/song/media/outer/url?id=1485777161.mp3",
-            pic: "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg?param=130y130",
-            lrc: `[by:智汇于群]\n[00:01.800]Look, I was gonna go easy on you and not to hurt your feelings\n[00:05.140]But I'm only going to get this one chance(Six minutes, six minutes)\n[00:10.020]Something's wrong, I can feel it (Six minutes, Slim Shady, you're on)\n[00:11.860]Just a feeling I've got, like something's about to happen, but I don't know what\n[00:18.150]If that means, what I think it means, we're in trouble – big trouble – and if he is as bananas as you say, I'm not taking any chances\n[00:24.720]You were just what the doctor ordered\n[00:26.360]I'm beginning to feel like a Rap God, Rap God\n[00:29.170]All my people from the front to the back nod, back nod\n[00:32.610]Now who thinks their arms are long enough to slap box, slap box?\n[00:35.860]They said I rap like a robot, so call me rap-bot\n[00:38.320]But for me to rap like a computer must be in my genes\n[00:40.520]I got a laptop in my back pocket\n[00:42.280]My pen'll go off when I half cock it\n[00:43.870]Got a fat knot from that rap profit\n[00:45.340]Made a living and a killing off it\n[00:46.730]Ever since Bill Clinton was still in office\n[00:48.330]With Monica Lewinsky feeling on his nutsack\n[00:50.230]I'm an MC still as honest\n[00:51.710]But as rude and as indecent as all hell\n[00:53.120]Syllables, skill-a-holic (Kill 'em all with)\n[00:54.860]This flippity, dippity-hippity hip-hop\n[00:56.240]You don't really wanna get into a pissing match with this rappity-rap\n[00:58.780]Packing a mack in the back of the Ac, backpack rap, crap, yap-yap, yackety-yack\n[01:01.740]And at the exact same time\n[01:02.860]I attempt these lyrical acrobat stunts while I'm practicing that\n[01:04.780]I'll still be able to break a mother****in' table\n[01:06.260]Over the back of a couple of ******s and crack it in half\n[01:08.250]Only realized it was ironic I was signed to Aftermath after the fact\n[01:11.800]How could I not blow? All I do is drop F-bombs, feel my wrath of attack\n[01:15.010]Rappers are having a rough time period, here's a Maxi-Pad\n[01:17.160]It's actually disastrously bad for the wack\n[01:19.160]while I'm masterfully constructing this masterpiece yeah\n[01:21.100]Cause I'm beginning to feel like a Rap God, Rap God\n[01:24.540]All my people from the front to the back nod, back nod\n[01:27.710]Now who thinks their arms are long enough to slap box, slap box?\n[01:30.950]Let me show you maintaining this shit ain't that hard, that hard\n[01:34.200]Everybody want the key and the secret to rap immortality like I have got\n[01:37.520]Well, to be truthful the blueprint's simply rage and youthful exuberance\n[01:40.030]Everybody loves to root for a nuisance\n[01:41.680]Hit the earth like an asteroid, and did nothing but shoot for the moon since (PPEEYOOM)\n[01:44.720]MC's get taken to school with this music\n[01:46.480]Cause I use it as a vehicle to 'bus the rhyme'\n[01:48.140]Now I lead a new school full of students\n[01:50.180]Me? I'm a product of Rakim, Lakim Shabazz, 2Pac N-W-A., Cube, hey, Doc, Ren, Yella, Eazy, thank you, they got Slim\n[01:56.240]Inspired enough to one day grow up, blow up and being in a position\n[01:59.420]To meet Run-D.M.C. and induct them into the mother****in' Rock n'\n[02:02.960]Roll Hall of Fame even though I walk in the church and burst in a ball of flames\n[02:06.120]Only Hall of Fame I be inducted in is the alcohol of fame\n[02:09.040]On the wall of shame\n[02:10.250]You fags think it's all a game 'til I walk a flock of flames\n[02:13.310]Off of planking, tell me what in the **** are you thinking?\n[02:16.320]Little gay looking boy\n[02:17.510]So gay I can barely say it with a straight face looking boy\n[02:19.550]You witnessing a massacre\n[02:20.780]Like you watching a church gathering take place looking boy\n[02:22.910]Oy vey, that boy's gay, that's all they say looking boy\n[02:26.130]You get a thumbs up, pat on the back\n[02:27.580]And a way to go from your label everyday looking boy\n[02:29.280]Hey, looking boy, what you say looking boy?\n[02:30.920]I got a \"hell yeah\" from Dre looking boy\n[02:32.500]I'mma work for everything I have\n[02:33.960]Never ask nobody for shit, get outta my face looking boy\n[02:35.750]Basically boy you're never gonna be capable\n[02:37.780]To keep up with the same pace looking boy\n[02:39.090]Cause I'm beginning to feel like a Rap God, Rap God\n[02:42.360]All my people from the front to the back nod, back nod\n[02:45.520]The way I'm racing around the track, call me Nascar, Nascar\n[02:48.720]Dale Earnhardt of the trailer park, the White Trash God\n[02:51.480]Kneel before General Zod this planet's Krypton, no Asgard, Asgard\n[02:55.200]So you be Thor and I'll be Odin\n[02:56.840]You rodent, I'm omnipotent\n[02:58.980]Let off then I'm reloading immediately with these bombs I'm totin'\n[03:01.880]And I should not be woken\n[03:03.840]I'm the walking dead, but I'm just a talking head, a zombie floating\n[03:07.010]But I got your mom deep throating\n[03:08.570]I'm out my ramen noodle\n[03:09.850]We have nothing in common, poodle\n[03:11.450]I'm a doberman, pinch yourself in the arm and pay homage, pupil\n[03:15.000]It's me, my honesty's brutal\n[03:17.720]But it's honestly futile if I don't utilize what I do though\n[03:20.580]For good at least once in a while\n[03:21.980]So I wanna make sure somewhere in this chicken scratch I scribble and doodle\n[03:24.520]Enough rhymes to maybe to try and help get some people through tough times\n[03:27.720]But I gotta keep a few punchlines just in case cause even you unsigned\n[03:30.880]Rappers are hungry looking at me like it's lunchtime\n[03:33.250]I know there was a time where once I\n[03:35.010]Was king of the underground, but I still rap like I'm on my Pharoahe Monch grind\n[03:38.230]So I crunch rhymes, but sometimes when you combine\n[03:40.280]Appeal with the skin color of mine\n[03:42.150]You get too big and here they come trying to censor you\n[03:44.550]Like that one line I said on \"I'm Back\" from the Marshall Mathers LP\n[03:47.260]One where I tried to say I take seven kids from Columbine\n[03:50.090]Put 'em all in a line, add an AK-47, a revolver and a nine\n[03:53.870]See if I get away with it now that I ain't as big as I was, but I've Morphed into an immortal coming through the portal\n[03:59.960]You're stuck in a timewarp from 2004 though\n[04:01.990]And I don't know what the **** that you rhyme for\n[04:04.190]You're pointless as Rapunzel with ****ing cornrows\n[04:06.730]You're like normal, **** being normal\n[04:08.520]And I just bought a new Raygun from the future\n[04:10.570]To just come and shoot ya like when Fabolous made Ray J mad\n[04:13.100]Cause Fab said he looked like a fag at Maywhether’s pad\n[04:15.050]Singin' to a man while they played piano\n[04:16.580]Man, oh man, that was a 24/7 special on the cable channel\n[04:19.740]So Ray J went straight to the radio station the very next day\n[04:22.550]''Hey, Fab, I'mma kill you''\n[04:23.770]Lyrics coming at you at supersonic speed, (JJ Fad)\n[04:25.920]Uh, sama lamaa duma lamaa you assuming I'm a human\n[04:28.030]What I gotta do to get it through to you I'm superhuman\n[04:29.300]Innovative and I'm made of rubber\n[04:30.440]So that anything you saying is ricocheting off of me and it'll glue to you\n[04:32.500]I'm never stating, more than never demonstrating\n[04:34.110]How to give a mother****in' audience a feeling like it's levitating\n[04:35.740]Never fading, and I know that the haters are forever waiting\n[04:37.640]For the day that they can say I fell off, they'd be celebrating\n[04:39.200]Cause I know the way to get 'em motivated\n[04:40.470]I make elevating music, you make elevator music\n[04:42.700]Oh, he's too mainstream\n[04:43.780]Well, that's what they do when they get jealous, they confuse it\n[04:46.090]It's not hip hop, it's pop, cause I found a hella way to fuse it\n[04:48.710]With rock, shock rap with Doc\n[04:50.720]Throw on \"Lose Yourself\" and make 'em lose it\n[04:52.600]I don't know how to make songs like that\n[04:53.920]I don't know what words to use\n[04:55.410]Let me know when it occurs to you\n[04:56.790]While I’m ripping any one of these verses diverse as you\n[04:58.410]It’s curtains, I’m inadvertently hurtin' you\n[05:00.090]How many verses I gotta murder to prove\n[05:01.580]That if you're half as nice at songs you can sacrifice virgins too\n[05:05.230]School flunkie, pill junky\n[05:07.390]But look at the accolades the skills brung me\n[05:09.940]Full of myself, but still hungry\n[05:11.810]I bully myself cause I make me do what I put my mind to\n[05:14.630]And I'm a million leagues above you, ill when I speak in tongues\n[05:18.270]But it's still tongue in cheek, **** you\n[05:20.060]I'm drunk so Satan take the ****ing wheel, I'm asleep in the front seat\n[05:23.710]Bumping Heavy D and the Boys, still chunky, but funky\n[05:26.210]But in my head there's something I can feel tugging and struggling\n[05:29.940]Angels fight with devils, here's what they want from me\n[05:33.460]They asking me to eliminate some of the women hate\n[05:35.220]But if you take into consideration the bitter hatred that I had\n[05:37.340]Then you may be a little patient and more sympathetic to the situation\n[05:40.200]And understand the discrimation\n[05:42.200]But **** it, life's handing you lemons, make lemonade then\n[05:45.070]But if I can't batter the women how the **** am I supposed to bake them a cake then?\n[05:48.740]Don't mistake it for Satan\n[05:49.980]It's a fatal mistake if you think I need to be overseas\n[05:52.020]And take a vacation to trip a broad\n[05:53.950]And make her fall on her face and don't be a retard\n[05:56.670]Be a king? Think not—why be a king when you can be a God?`,
+            title: "バッグパイパー",
+            artist: "ファクトリー・ノイズ&AG",
+            src: "https://music.163.com/song/media/outer/url?id=403136190.mp3",
+            pic: "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg",
+            lrc: "[00:00.00]纯音乐，请欣赏"
         },
+        musicList: [],
+        // 本地若有登录信息，则读取本地登录信息，否则state.userInfo初始化
+        userInfo: window.sessionStorage.getItem('userInfo') ? JSON.parse(window.sessionStorage.getItem('userInfo')) : {
+            id: 0,
+            account: '',
+            name: '',
+            is_admin: 0,
+        },
+        // 若本地有登录信息，则state.isLogin为true，否则为false
+        isLogin: window.sessionStorage.getItem('userInfo') ? true : false,
     },
     mutations: {
         //修改当前歌曲
-        changeCurrentSong(state, song) {
+        setCurrentSong(state, song) {
             state.currentSong = song
+        },
+        //修改播放列表
+        setMusicList(state, list) {
+            state.musicList = list;
+            // console.log(list[0]);
+            state.currentSong = list[0];
+        },
+        //向播放列表中添加歌曲
+        addMusic(state, song) {
+            state.musicList.push(song);
+        },
+        setUserLogin(state, user) {
+            // 将用户信息保存在sessionStorage
+            window.sessionStorage.setItem('userInfo', JSON.stringify(user));
+            console.log();
+            // 将本地的用户信息保存在vuex中
+            state.userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'));
+            state.isLogin = true
+        },
+        setUserLogout(state) {
+            // 将用户信息从本地删除
+            window.sessionStorage.removeItem('userInfo');
+            // 将用户信息从vuex中删除
+            state.userInfo = {
+                id: 0,
+                account: '',
+                name: '',
+                is_admin: 0,
+            };
+            state.isLogin = false
         }
     },
     actions: {
-        setCurrentSong(context, id) {
+        changeCurrentSong(context, id) {
             //根据id发送请求，获取歌曲信息
-            //模拟返回数据
-            let song = {}
-            switch (id) {
-                case 1:
-                    song = {
-                        title: "バッグパイパー",
-                        artist: "ファクトリー・ノイズ&AG",
-                        src: "https://music.163.com/song/media/outer/url?id=403136190.mp3",
-                        pic: "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg?param=130y130",
+            axios({
+                url: '/music/getMusicById',
+                method: 'get',
+                params: {
+                    id: id
+                }
+            }).then(res => {
+                if (res.data.code === 200) {
+                    //在无歌词的时候，使用默认歌词
+                    if (!res.data.obj.music.lrc) {
+                        res.data.obj.music.lrc = `[00:00.00]纯音乐，请欣赏`
                     }
-                    break;
-                case 2:
-                    song = {
-                        title: "空っぽの空に潰される",
-                        artist: "amazarashi",
-                        src: "https://music.163.com/song/media/outer/url?id=32046764.mp3",
-                        pic: "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg?param=130y130",
-                        lrc: `[00:28.29]受け取った手紙が増えすぎて\n[00:31.24]自分の荷物は捨てていった\n[00:34.39]満たされた気持ちになって\n[00:37.42]その実また空っぽだ\n[00:40.80]お金は多い方がいい\n[00:43.61]友達は多い方がいい\n[00:46.76]安心も多い方がいい\n[00:49.54]結局幸福とはなんだ\n[00:52.93]必ず死ぬと書いて必死\n[00:56.08]夢の中と書いて夢中\n[00:59.03]まさに必死で夢中になって\n[01:02.23]僕らは季節を駆け抜けた\n[01:05.43]怪我ばっかりが増えたけれど\n[01:08.43]痛えと笑える仲間が居た\n[01:11.50]昔の自分に嫉妬するな\n[01:14.60]そいつが君の仮想敵だ\n[01:17.65]楽しけりゃ笑えばいいんだろ\n[01:20.35]悲しい時は泣いたらいいんだろ\n[01:23.45]虚しい時はどうすりゃいいの?\n[01:27.08]教えて　教えて\n[01:30.29]名残惜しさも無くさよなら\n[01:32.74]巡り巡る季節は素っ気無い\n[01:35.84]それに何を期待すりゃいいの?\n[01:39.58]教えて　教えて\n[01:43.80]空っぽの 空っぽの 空っぽの 空に潰される\n[02:01.87]結局人間ってのは\n[02:16.70]一つや二つの欠落はある\n[02:22.75]何かが足りないと思うか\n[02:25.85]何かが必要と思うか 最低限の荷物はある\n[02:31.98]僕にはこれで十分すぎる\n[02:35.18]もう一度僕は駆けてみよう\n[02:38.09]必死で夢中に駆けてみよう\n[02:41.34]今日が暮れて今日がやってくる\n[02:44.59]流れのままにとは行かないが\n[02:47.54]嫌なものを嫌と言ってたら\n[02:50.54]こんな今日に流れ着いた\n[02:53.70]だから今日は記念日だ\n[02:56.75]戦った僕の記念日だ\n[02:59.85]ただ一つだけ問題がある\n[03:02.85]全くもって虚しい今日だ\n[03:06.08]楽しけりゃ笑えばいいんだろ\n[03:08.68]悲しい時は泣いたらいいんだろ\n[03:11.88]虚しい時はどうすりゃいいの?\n[03:14.90]教えて　教えて\n[03:18.45]名残惜しさも無くさよなら\n[03:21.10]愛した人や物はあっけない\n[03:24.20]それに何を期待すりゃいいの?\n[03:27.85]教えて　教えて\n[03:32.54]空っぽの空に潰される\n[04:05.25]弱音を吐いたら楽になるか\n[04:08.01]泣くだけ泣いたら楽になるか\n[04:11.11]死にたいと言えば気持ちいいか\n[04:13.96]そこから踏み出したくはないか\n[04:17.31]どっかに忘れ物をしたよ\n[04:20.31]教室か母のお腹の中\n[04:23.52]恒久的な欠落を\n[04:26.57]愛してこその幸福だ\n[04:29.67]楽しけりゃ笑えばいいんだろ\n[04:32.22]悲しい時は泣いたらいいんだろ 虚しい時はどうすりゃいいの?\n[04:38.71]教えて　教えて\n[04:42.41]暗いところからやって来て\n[04:44.79]暗いところへ帰っていくだけ\n[04:47.84]その間に　何が出来るの?\n[04:51.13]教えて　教えて\n[04:55.88]空っぽの空に潰される\n`,
-                    }
-                    break;
-                case 3:
-                    song = {
-                        title: "Rap God",
-                        artist: "Eminem",
-                        src: "https://music.163.com/song/media/outer/url?id=1485777161.mp3",
-                        pic: "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg?param=130y130",
-                        lrc: `[00:01.800]Look, I was gonna go easy on you and not to hurt your feelings\n[00:05.140]But I'm only going to get this one chance(Six minutes, six minutes)\n[00:10.020]Something's wrong, I can feel it (Six minutes, Slim Shady, you're on)\n[00:11.860]Just a feeling I've got, like something's about to happen, but I don't know what\n[00:18.150]If that means, what I think it means, we're in trouble – big trouble – and if he is as bananas as you say, I'm not taking any chances\n[00:24.720]You were just what the doctor ordered\n[00:26.360]I'm beginning to feel like a Rap God, Rap God\n[00:29.170]All my people from the front to the back nod, back nod\n[00:32.610]Now who thinks their arms are long enough to slap box, slap box?\n[00:35.860]They said I rap like a robot, so call me rap-bot\n[00:38.320]But for me to rap like a computer must be in my genes\n[00:40.520]I got a laptop in my back pocket\n[00:42.280]My pen'll go off when I half cock it\n[00:43.870]Got a fat knot from that rap profit\n[00:45.340]Made a living and a killing off it\n[00:46.730]Ever since Bill Clinton was still in office\n[00:48.330]With Monica Lewinsky feeling on his nutsack\n[00:50.230]I'm an MC still as honest\n[00:51.710]But as rude and as indecent as all hell\n[00:53.120]Syllables, skill-a-holic (Kill 'em all with)\n[00:54.860]This flippity, dippity-hippity hip-hop\n[00:56.240]You don't really wanna get into a pissing match with this rappity-rap\n[00:58.780]Packing a mack in the back of the Ac, backpack rap, crap, yap-yap, yackety-yack\n[01:01.740]And at the exact same time\n[01:02.860]I attempt these lyrical acrobat stunts while I'm practicing that\n[01:04.780]I'll still be able to break a mother****in' table\n[01:06.260]Over the back of a couple of ******s and crack it in half\n[01:08.250]Only realized it was ironic I was signed to Aftermath after the fact\n[01:11.800]How could I not blow? All I do is drop F-bombs, feel my wrath of attack\n[01:15.010]Rappers are having a rough time period, here's a Maxi-Pad\n[01:17.160]It's actually disastrously bad for the wack\n[01:19.160]while I'm masterfully constructing this masterpiece yeah\n[01:21.100]Cause I'm beginning to feel like a Rap God, Rap God\n[01:24.540]All my people from the front to the back nod, back nod\n[01:27.710]Now who thinks their arms are long enough to slap box, slap box?\n[01:30.950]Let me show you maintaining this shit ain't that hard, that hard\n[01:34.200]Everybody want the key and the secret to rap immortality like I have got\n[01:37.520]Well, to be truthful the blueprint's simply rage and youthful exuberance\n[01:40.030]Everybody loves to root for a nuisance\n[01:41.680]Hit the earth like an asteroid, and did nothing but shoot for the moon since (PPEEYOOM)\n[01:44.720]MC's get taken to school with this music\n[01:46.480]Cause I use it as a vehicle to 'bus the rhyme'\n[01:48.140]Now I lead a new school full of students\n[01:50.180]Me? I'm a product of Rakim, Lakim Shabazz, 2Pac N-W-A., Cube, hey, Doc, Ren, Yella, Eazy, thank you, they got Slim\n[01:56.240]Inspired enough to one day grow up, blow up and being in a position\n[01:59.420]To meet Run-D.M.C. and induct them into the mother****in' Rock n'\n[02:02.960]Roll Hall of Fame even though I walk in the church and burst in a ball of flames\n[02:06.120]Only Hall of Fame I be inducted in is the alcohol of fame\n[02:09.040]On the wall of shame\n[02:10.250]You fags think it's all a game 'til I walk a flock of flames\n[02:13.310]Off of planking, tell me what in the **** are you thinking?\n[02:16.320]Little gay looking boy\n[02:17.510]So gay I can barely say it with a straight face looking boy\n[02:19.550]You witnessing a massacre\n[02:20.780]Like you watching a church gathering take place looking boy\n[02:22.910]Oy vey, that boy's gay, that's all they say looking boy\n[02:26.130]You get a thumbs up, pat on the back\n[02:27.580]And a way to go from your label everyday looking boy\n[02:29.280]Hey, looking boy, what you say looking boy?\n[02:30.920]I got a \"hell yeah\" from Dre looking boy\n[02:32.500]I'mma work for everything I have\n[02:33.960]Never ask nobody for shit, get outta my face looking boy\n[02:35.750]Basically boy you're never gonna be capable\n[02:37.780]To keep up with the same pace looking boy\n[02:39.090]Cause I'm beginning to feel like a Rap God, Rap God\n[02:42.360]All my people from the front to the back nod, back nod\n[02:45.520]The way I'm racing around the track, call me Nascar, Nascar\n[02:48.720]Dale Earnhardt of the trailer park, the White Trash God\n[02:51.480]Kneel before General Zod this planet's Krypton, no Asgard, Asgard\n[02:55.200]So you be Thor and I'll be Odin\n[02:56.840]You rodent, I'm omnipotent\n[02:58.980]Let off then I'm reloading immediately with these bombs I'm totin'\n[03:01.880]And I should not be woken\n[03:03.840]I'm the walking dead, but I'm just a talking head, a zombie floating\n[03:07.010]But I got your mom deep throating\n[03:08.570]I'm out my ramen noodle\n[03:09.850]We have nothing in common, poodle\n[03:11.450]I'm a doberman, pinch yourself in the arm and pay homage, pupil\n[03:15.000]It's me, my honesty's brutal\n[03:17.720]But it's honestly futile if I don't utilize what I do though\n[03:20.580]For good at least once in a while\n[03:21.980]So I wanna make sure somewhere in this chicken scratch I scribble and doodle\n[03:24.520]Enough rhymes to maybe to try and help get some people through tough times\n[03:27.720]But I gotta keep a few punchlines just in case cause even you unsigned\n[03:30.880]Rappers are hungry looking at me like it's lunchtime\n[03:33.250]I know there was a time where once I\n[03:35.010]Was king of the underground, but I still rap like I'm on my Pharoahe Monch grind\n[03:38.230]So I crunch rhymes, but sometimes when you combine\n[03:40.280]Appeal with the skin color of mine\n[03:42.150]You get too big and here they come trying to censor you\n[03:44.550]Like that one line I said on \"I'm Back\" from the Marshall Mathers LP\n[03:47.260]One where I tried to say I take seven kids from Columbine\n[03:50.090]Put 'em all in a line, add an AK-47, a revolver and a nine\n[03:53.870]See if I get away with it now that I ain't as big as I was, but I've Morphed into an immortal coming through the portal\n[03:59.960]You're stuck in a timewarp from 2004 though\n[04:01.990]And I don't know what the **** that you rhyme for\n[04:04.190]You're pointless as Rapunzel with ****ing cornrows\n[04:06.730]You're like normal, **** being normal\n[04:08.520]And I just bought a new Raygun from the future\n[04:10.570]To just come and shoot ya like when Fabolous made Ray J mad\n[04:13.100]Cause Fab said he looked like a fag at Maywhether’s pad\n[04:15.050]Singin' to a man while they played piano\n[04:16.580]Man, oh man, that was a 24/7 special on the cable channel\n[04:19.740]So Ray J went straight to the radio station the very next day\n[04:22.550]''Hey, Fab, I'mma kill you''\n[04:23.770]Lyrics coming at you at supersonic speed, (JJ Fad)\n[04:25.920]Uh, sama lamaa duma lamaa you assuming I'm a human\n[04:28.030]What I gotta do to get it through to you I'm superhuman\n[04:29.300]Innovative and I'm made of rubber\n[04:30.440]So that anything you saying is ricocheting off of me and it'll glue to you\n[04:32.500]I'm never stating, more than never demonstrating\n[04:34.110]How to give a mother****in' audience a feeling like it's levitating\n[04:35.740]Never fading, and I know that the haters are forever waiting\n[04:37.640]For the day that they can say I fell off, they'd be celebrating\n[04:39.200]Cause I know the way to get 'em motivated\n[04:40.470]I make elevating music, you make elevator music\n[04:42.700]Oh, he's too mainstream\n[04:43.780]Well, that's what they do when they get jealous, they confuse it\n[04:46.090]It's not hip hop, it's pop, cause I found a hella way to fuse it\n[04:48.710]With rock, shock rap with Doc\n[04:50.720]Throw on \"Lose Yourself\" and make 'em lose it\n[04:52.600]I don't know how to make songs like that\n[04:53.920]I don't know what words to use\n[04:55.410]Let me know when it occurs to you\n[04:56.790]While I’m ripping any one of these verses diverse as you\n[04:58.410]It’s curtains, I’m inadvertently hurtin' you\n[05:00.090]How many verses I gotta murder to prove\n[05:01.580]That if you're half as nice at songs you can sacrifice virgins too\n[05:05.230]School flunkie, pill junky\n[05:07.390]But look at the accolades the skills brung me\n[05:09.940]Full of myself, but still hungry\n[05:11.810]I bully myself cause I make me do what I put my mind to\n[05:14.630]And I'm a million leagues above you, ill when I speak in tongues\n[05:18.270]But it's still tongue in cheek, **** you\n[05:20.060]I'm drunk so Satan take the ****ing wheel, I'm asleep in the front seat\n[05:23.710]Bumping Heavy D and the Boys, still chunky, but funky\n[05:26.210]But in my head there's something I can feel tugging and struggling\n[05:29.940]Angels fight with devils, here's what they want from me\n[05:33.460]They asking me to eliminate some of the women hate\n[05:35.220]But if you take into consideration the bitter hatred that I had\n[05:37.340]Then you may be a little patient and more sympathetic to the situation\n[05:40.200]And understand the discrimation\n[05:42.200]But **** it, life's handing you lemons, make lemonade then\n[05:45.070]But if I can't batter the women how the **** am I supposed to bake them a cake then?\n[05:48.740]Don't mistake it for Satan\n[05:49.980]It's a fatal mistake if you think I need to be overseas\n[05:52.020]And take a vacation to trip a broad\n[05:53.950]And make her fall on her face and don't be a retard\n[05:56.670]Be a king? Think not—why be a king when you can be a God?`,
-                    }
-                    break;
-                case 4:
-                    song = {
-                        title: "BiBiC HEART",
-                        artist: "MYUKKE.",
-                        src: "https://music.163.com/song/media/outer/url?id=1874162498.mp3",
-                        pic: "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg?param=130y130",
-                    }
-                    break;
-                case 5:
-                    song = {
-                        title: "The 89's Momentum",
-                        artist: "MYUKKE.",
-                        src: "https://music.163.com/song/media/outer/url?id=1401248153.mp3",
-                        pic: "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg?param=130y130",
-                    }
-                    break;
-            }
-            //在无歌词的时候，使用默认歌词
-            if (!song.lrc) {
-                song.lrc = `[00:00.00]纯音乐，请欣赏`
-            }
-            //将response中的数据发送给mutations中的setCurrentSong
-            context.commit('changeCurrentSong', song);
+                    // 数据库传回是会把\n变为\\n，替换res.data.obj.music.lrc中的\\n为\n
+                    res.data.obj.music.lrc = res.data.obj.music.lrc.replace(/\\n/g, '\n');
+                    //将歌手数组对象转为名字数组，再转为字符串
+                    const artistList = res.data.obj.artist.map(item => {
+                        return item.name
+                    }).join(' / ');
+                    // 封装一个歌曲对象
+                    const music = {
+                        title: res.data.obj.music.name,
+                        artist: artistList,
+                        src: res.data.obj.music.url,
+                        pic: res.data.obj.music.cover,
+                        lrc: res.data.obj.music.lrc,
+                    };
+                    //将response中的数据发送给mutations中的setCurrentSong
+                    // context.commit('addMusic', music);
+                    context.commit('setCurrentSong', music);
+                }
+            });
+        },
+        changeMusicList(context, list) {
+            const musicList = [];
+            list.forEach(item => {
+                if (!item.music_lrc) {
+                    item.music_lrc = `[00:00.00]纯音乐，请欣赏`
+                }
+                item.music_lrc = item.music_lrc.replace(/\\n/g, '\n');
+                // const artistList = res.data.obj.artist.map(item => {
+                //     return item.name
+                // }).join(' / ');
+                musicList.push({
+                    title: item.music_name,
+                    artist: item.artist_name,
+                    src: item.music_url,
+                    pic: item.music_cover,
+                    lrc: item.music_lrc,
+                })
+            });
+            context.commit('setMusicList', musicList);
+        },
+        login(context, user) {
+            // 向服务器发送请求，获取用户信息
+            axios({
+                url: '/user/login',
+                method: 'post',
+                data: user
+            }).then(res => {
+                // console.log(res);
+                if (res.data.code === 200) {
+                    //将用户信息发送给mutations中的setUserLogin
+                    context.commit('setUserLogin', res.data.obj[0]);
+                } else {
+                    // $message({
+                    //     message: res.data.msg,
+                    //     type: "error",
+                    // });
+                    // alert(res.data.msg);
+                }
+            })
+        },
+        logout(context) {
+            context.commit('setUserLogout');
         }
     },
     modules: {}

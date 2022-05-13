@@ -9,6 +9,9 @@ import Aplayer from "vue-aplayer";
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(Aplayer);
+
+axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 Vue.prototype.$axios = axios;
 
 new Vue({

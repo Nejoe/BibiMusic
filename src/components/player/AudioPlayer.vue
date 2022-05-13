@@ -1,13 +1,7 @@
 <template>
   <div class="player">
-    <aplayer
-      ref="aplayer"
-      :autoplay="true"
-      :showLrc="true"
-      :music="currentSong"
-      theme="#41B883"
-      :volume="1"
-    />
+    <aplayer ref="aplayer" :autoplay="true" :showLrc="true" :music="currentSong" theme="#409EFF" :volume="1"
+      :list="musicList" repeat="repeat-all" :listFolded="true" v-if="refresh"/>
   </div>
 </template>
 
@@ -19,18 +13,30 @@ export default {
   name: "AudioPlayer",
   components: { Aplayer },
   data() {
-    return {};
+    return {
+      refresh: true,
+    };
   },
   methods: {
 
   },
   computed: {
-    ...mapState({ currentSong: "currentSong" }),
+    ...mapState({ currentSong: "currentSong", musicList: "musicList" }),
   },
   watch: {
     //当前播放歌曲发生变化时，自动播放音乐
-    "$store.state.currentSong"() {
-      this.$refs.aplayer.thenPlay();
+    "currentSong"() {
+      // vue重新加载refs对象
+      this.refresh = false;
+      this.$nextTick(()=>{
+        this.refresh = true;
+      })
+    },
+    "musicList"() {
+      this.refresh = false;
+      this.$nextTick(()=>{
+        this.refresh = true;
+      })
     },
   },
 };
@@ -40,31 +46,36 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #181818;
-  border-top: 1px solid #282828;
+  /* background-color: #181818; */
+  /* border-top: 1px solid #DCDFE6; */
 }
+
 .aplayer {
   margin: 0 !important;
-  background-color: #181818 !important;
+  /* background-color: #181818 !important; */
 }
+
 .aplayer-lrc:after {
-  background: linear-gradient(
+  /* background: linear-gradient(
     180deg,
     hsla(0, 0%, 100%, 0) 0,
     hsl(0deg 0% 0% / 0%)
-  ) !important;
+  ) !important; */
 }
+
 .aplayer-lrc:before {
-  background: linear-gradient(
+  /* background: linear-gradient(
     180deg,
     #181818 0,
     hsla(0, 0%, 100%, 0)
-  ) !important;
+  ) !important; */
 }
+
 .aplayer-title {
-  color: white;
+  /* color: white; */
 }
+
 .aplayer-controller .aplayer-time .aplayer-icon .aplayer-fill {
-  fill: #fff !important ;
+  /* fill: #fff !important ; */
 }
 </style>
