@@ -20,16 +20,17 @@
                 <!-- <el-link v-model="musicData" :key="index">
                   {{ musicData.artist }}
                 </el-link> -->
-                <el-link style="margin-left:5px" v-for="(artist, index) in musicData.artist" :key="index" @click="goArtistDetail(artist.id)">
+                <el-link style="margin-left:5px" v-for="(artist, index) in musicData.artist" :key="index"
+                  @click="goArtistDetail(artist.id)">
                   {{ artist.name }}
                 </el-link>
               </div>
               <el-button-group>
                 <el-button type="primary" icon="el-icon-caret-right" @click="playMusic($route.params.id)">播放</el-button>
-                <el-button  icon="el-icon-star-off">收藏</el-button>
-                <el-button  icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论 ({{ totalComment
+                <el-button icon="el-icon-star-off">收藏</el-button>
+                <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论 ({{ totalComment
                 }})</el-button>
-                <el-button  icon="el-icon-circle-plus-outline">添加到</el-button>
+                <el-button icon="el-icon-circle-plus-outline">添加到</el-button>
               </el-button-group>
             </div>
           </div>
@@ -45,15 +46,18 @@
                 <el-button type="primary" size="small" @click="send">评论</el-button>
               </div>
               <!-- 循环加载评论 -->
-              <div class="allComment" v-show="totalComment!==0">
+              <div class="allComment" v-show="totalComment !== 0">
                 <h3>最新评论</h3>
                 <div class="comment" v-for="(comment, index) in comments" :key="index">
                   <div class="commentHeader">
                     <el-avatar shape="square" size="large" :src="comment.avatarUrl"></el-avatar>
                   </div>
                   <div class="commentContent">
-                    <el-link type="primary">{{ comment.nickname }}:</el-link>
-                    <div class="comment-content">{{ comment.content }}</div>
+                    <div class="comment-content">
+                      <el-link type="primary">{{ comment.nickname }} :</el-link> {{ comment.content }}
+                    </div>
+                    <!-- 引用的评论
+                    <div class="comment-reply"></div> -->
                     <div class="comment-info">
                       <p class="comment-createTime">{{ comment.createTime }}</p>
                       <div>
@@ -71,6 +75,10 @@
                         </el-button>
                       </div>
                     </div>
+                    <!-- 回复时出现回复输入框
+                    <div class="reply-area">
+
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -135,11 +143,11 @@ export default {
       });
     },
     goArtistDetail(id) {
-      console.log('歌手id', id);
-      // this.$router.push({
-      //   name: "Artist",
-      //   params: { id },
-      // });
+      // console.log('歌手id', id);
+      this.$router.push({
+        name: "Artist",
+        params: { id },
+      });
     },
     currentChange(currentPage) {
       this.currentPage = currentPage;
@@ -318,6 +326,7 @@ export default {
 .comment-content {
   width: 100%;
   /* height: 50px; */
+  font-size: 14px;
   word-break: break-all;
 }
 

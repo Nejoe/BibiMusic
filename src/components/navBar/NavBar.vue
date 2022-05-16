@@ -19,6 +19,7 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>主页</el-dropdown-item>
+          <el-dropdown-item command="manage" v-if="userInfo.is_admin===1">管理端</el-dropdown-item>
           <el-dropdown-item command="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -53,19 +54,20 @@ export default {
       switch (command) {
         case "logout":
           this.logout();
-          // this.$router.go(0);
           break;
-
+        case "manage":
+          this.$router.push("/manage");
+          break;
         default:
           break;
       }
     },
   },
   computed: {
-    userInfo(){
+    userInfo() {
       return this.$store.state.userInfo;
     },
-    isLogin(){
+    isLogin() {
       return this.$store.state.isLogin;
     }
   },
@@ -79,6 +81,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 /* el-button */
 .history {
   margin: 0 5px;
@@ -92,10 +95,12 @@ export default {
   /* background-color: #DCDFE6; */
   cursor: pointer;
 }
+
 .history:hover {
   color: #409EFF;
   background-color: #ECF5FF;
 }
+
 .login-btn {
   height: 40px;
   width: 80px;
@@ -107,12 +112,15 @@ export default {
   /* background-color: #DCDFE6; */
   cursor: pointer;
 }
+
 .login-btn:hover {
   color: #409EFF;
 }
+
 .el-dropdown-link {
   /* color: black; */
 }
+
 .info {
   display: flex;
   flex-direction: column;
@@ -125,10 +133,12 @@ export default {
   color: #303133;
   cursor: pointer;
 }
+
 .info:hover {
   background-color: #ECF5FF;
 }
-.info:hover span{
+
+.info:hover span {
   color: #409EFF;
 }
 </style>

@@ -99,6 +99,7 @@ export default new Vuex.Store({
             });
         },
         changeMusicList(context, list) {
+            console.log(list);
             const musicList = [];
             list.forEach(item => {
                 if (!item.music_lrc) {

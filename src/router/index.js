@@ -7,6 +7,9 @@ import Favorites from '../views/favorites/Favorites.vue'
 import Login from '../views/login/Login.vue'
 import Music from '../views/music/Music.vue'
 import Playlist from '../views/playlist/Playlist.vue'
+import Manage from '../views/manage/Manage.vue'
+import Artist from '../views/artist/Artist.vue'
+import User from '../views/user/User.vue'
 Vue.use(VueRouter)
 
 const originalPush = VueRouter.prototype.push
@@ -44,7 +47,23 @@ const routes = [
                 path: '/playlist/:id',
                 name: 'Playlist',
                 component: Playlist,
+            },
+            {
+                path: '/manage',
+                name: 'Manage',
+                component: Manage,
+            },
+            {
+                path: '/artist/:id',
+                name: 'Artist',
+                component: Artist,
+            },
+            {
+                path: '/user/:id',
+                name: 'User',
+                component: User
             }
+
         ]
     },
     {
@@ -58,6 +77,22 @@ const routes = [
 //配置VUE-ROUTER
 const router = new VueRouter({
     routes,
+})
+router.beforeEach((to, from, next) => {
+    // 管理端路由守护
+    if (to.name === 'Manage') {
+        if (!window.sessionStorage.getItem('userInfo') || JSON.parse(window.sessionStorage.getItem('userInfo')).is_admin === 0) {
+            router.push('/')
+        } else {
+            next()
+        }
+    } else if (to.name === 'Login') {
+        if (window.sessionStorage.getItem('userInfo')) {
+            router.push('/')
+        }
+    } else {
+        next()
+    }
 })
 
 export default router

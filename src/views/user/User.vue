@@ -6,29 +6,21 @@
         <el-main>
             <div class="main">
                 <el-row>
-                    <div class="playlistInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px"
-                            :src="playlistInfo[0].playlist_cover">
+                    <div class="userInfoArea">
+                        <el-image style="width: 225px; height: 225px; margin-right: 20px" :src="userData[0].avatar"
+                            lazy>
                         </el-image>
-                        <div class="playlistInfo">
-                            <p>歌单</p>
-                            <p>{{ playlistInfo[0].playlist_name }}</p>
-                            <div>
-                                <el-icon class="el-icon-user"></el-icon>
-                                <el-link style="margin-left:5px" @click="goDetail(playlistInfo[0].user_id, 'User')">
-                                    {{ playlistInfo[0].creater_name }}
-                                </el-link>
-                            </div>
+                        <div class="userInfo">
+                            <p>用户</p>
+                            <p>{{ userData[0].user_name }}</p>
                             <p>
                                 <el-icon class="el-icon-tickets"></el-icon>{{
-                                        playlistInfo[0].description ? playlistInfo[0].description : '暂无描述'
+                                        userData[0].description ? userData[0].description : '暂无介绍'
                                 }}
                             </p>
                             <el-button-group>
-                                <el-button type="primary" icon="el-icon-caret-right"
-                                    @click="changeMusicList(playlistData)">播放全部</el-button>
-                                <el-button icon="el-icon-star-off">收藏</el-button>
-                                <!-- <el-button type="primary" icon="el-icon-star-on">收藏</el-button> -->
+                                <!-- <el-button type="primary" icon="el-icon-caret-right"
+                                    @click="changeMusicList(userData)">播放全部</el-button> -->
                                 <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论
                                     ({{ totalComment
                                     }})</el-button>
@@ -36,35 +28,34 @@
                         </div>
                     </div>
                     <div class="musicListArea">
-                        <el-table :data="playlistData" stripe style="width: 100%;margin-top: 20px;" v-if="!is_empty">
-                            <el-table-column width="50px">
+                        <el-table :data="playlistData" stripe style="width: 100%;margin-top: 20px;">
+                            <!-- <el-table-column width="50px">
                                 <template slot-scope="scope">
                                     <el-button icon="el-icon-caret-right" size="mini"
                                         @click="playMusic(scope.row.music_id)" circle></el-button>
                                 </template>
-                            </el-table-column>
-                            <el-table-column label="封面" width="80px">
+                            </el-table-column> -->
+                            <el-table-column label="收藏歌单" width="80px">
                                 <template slot-scope="scope">
                                     <el-image style="width: 50px; height: 50px; margin-right: 20px; border-radius: 5px;"
-                                        :src="scope.row.music_cover" lazy>
+                                        :src="scope.row.cover">
                                     </el-image>
                                 </template>
                             </el-table-column>
                             <el-table-column label="标题" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-link @click="goDetail(scope.row.music_id, 'Music')">{{ scope.row.music_name }}
-                                    </el-link>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="歌手" :show-overflow-tooltip="true">
-                                <template slot-scope="scope">
-                                    <el-link @click="goDetail(scope.row.artist_id, 'Artist')">{{ scope.row.artist_name
+                                    <el-link @click="goDetail(scope.row.id,'Playlist')">{{ scope.row.name
                                     }}
                                     </el-link>
                                 </template>
                             </el-table-column>
+                            <el-table-column label="创建者" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    <el-link @click="goDetail(scope.row.user_id, 'User')">{{ scope.row.creater_name }}
+                                    </el-link>
+                                </template>
+                            </el-table-column>
                         </el-table>
-                        <el-empty description="暂无歌曲" v-else></el-empty>
                     </div>
                     <el-col :span="17">
                         <div class="commentArea" ref="comment">
@@ -118,11 +109,11 @@
                             </el-pagination>
                         </div>
                     </el-col>
-                    <el-col :span="7">
+                    <!-- <el-col :span="7">
                         <div class="randomArea">
-                            <h2>随机推荐歌单</h2>
-                            <el-card :body-style="{ padding: '0px' }" v-for="playlist in randomPlaylist"
-                                :key="playlist.id" shadow="hover" @click.native="goDetail(playlist.id, 'Playlist')">
+                            <h2>相关歌单推荐</h2>
+                            <el-card :body-style="{ padding: '0px' }" v-for="playlist in aboutPlaylist"
+                                :key="playlist.id" shadow="hover" @click.native="goPlaylistDetail(playlist.id)">
                                 <img :src="playlist.cover" class="image">
                                 <div class="card-right">
                                     <p>{{ playlist.name }}</p>
@@ -130,7 +121,7 @@
                                 </div>
                             </el-card>
                         </div>
-                    </el-col>
+                    </el-col> -->
                 </el-row>
             </div>
         </el-main>
@@ -145,21 +136,17 @@ export default {
     components: { NavBar },
     data() {
         return {
-            is_empty: true,
             currentPage: 1,
             pageSize: 10,
             totalComment: 0,
             textarea: "",
-            playlistData: [],
-            playlistInfo: [{
-                playlist_cover:''
+            userData: [{
+                avatar: ''
             }],
-            randomPlaylist: [],
+            playlistData: [],
+            aboutPlaylist: [],
             comments: [],
         }
-    },
-    computed: {
-
     },
     methods: {
         ...mapActions({
@@ -185,10 +172,10 @@ export default {
         getComment() {
             // 根据歌单id获取评论
             this.$axios({
-                url: "/comment/getPlaylistComment",
+                url: "/comment/getUserComment",
                 method: "get",
                 params: {
-                    playlist_id: this.$route.params.id,
+                    user_page_id: this.$route.params.id,
                     page: this.currentPage,
                     pageSize: this.pageSize,
                 },
@@ -228,9 +215,9 @@ export default {
                 // 发送歌单评论请求
                 this.$axios({
                     method: "POST",
-                    url: "/comment/addPlaylistComment",
+                    url: "/comment/addUserComment",
                     data: {
-                        playlist_id: this.$route.params.id,
+                        user_page_id: this.$route.params.id,
                         content: this.textarea,
                         user_id: this.$store.state.userInfo.id,
                     },
@@ -257,57 +244,48 @@ export default {
                 this.deleteComment(id);
             }).catch(() => { });
         },
-        getPlaylistInfo() {
-            // 获取歌单信息
+        getUserInfo() {
             this.$axios({
-                url: "/playlist/getPlaylistInfo",
+                url: "/user/getUserInfo",
                 method: "get",
                 params: {
-                    playlist_id: this.$route.params.id,
+                    user_id: this.$route.params.id,
                 },
             }).then((res) => {
                 if (res.data.code === 200) {
                     console.log(res.data.obj);
-                    this.playlistInfo = res.data.obj;
+                    this.userData = res.data.obj;
                 } else {
                     this.$message.error(res.data.msg);
                 }
             });
 
         },
-        getPlaylistById() {
-            // 获取歌单歌曲
+        getUserPageInfo() {
+            // 获取歌曲信息
             this.$axios({
                 method: "GET",
-                url: "/playlist/getPlaylistById",
+                url: "/playlist/getUserPageInfo",
                 params: {
-                    playlist_id: this.$route.params.id,
+                    user_id: this.$route.params.id,
                 },
             }).then((res) => {
                 console.log(res.data);
-                if (res.data.code === 200) {
-                    if (res.data.obj.length !== 0) {
-                        this.is_empty = false;
-                        this.playlistData = res.data.obj;
-                    } else {
-                        this.is_empty = true;
-                    }
-                } else {
-                    this.$message.error(res.data.msg);
-                }
+                this.playlistData = res.data.obj;
             });
         },
-        getRandomPlaylist() {
-            // 获取随机歌单，传入该页面的id，防止获取到自己的歌单
+        getAboutPlaylist() {
+            // 获取相关歌单，传入歌手id
             this.$axios({
                 method: "GET",
-                url: "/playlist/getRandomPlaylist",
+                url: "/playlist/getAboutPlaylist",
                 params: {
-                    playlist_id: this.$route.params.id,
+                    user_id: this.$route.params.id,
                     limit: 3,
                 },
             }).then((res) => {
-                this.randomPlaylist = res.data.obj;
+                console.log('相关歌单', res.data);
+                this.aboutPlaylist = res.data.obj;
             });
         }
 
@@ -315,16 +293,14 @@ export default {
     watch: {
         // 路由变化时，获取歌单信息
         "$route.params.id": function () {
-            this.getPlaylistInfo();
-            this.getPlaylistById();
+            this.getUserInfo();
+            this.getUserPageInfo();
             this.getComment();
-            this.getRandomPlaylist();
         }
     },
     mounted() {
-        this.getPlaylistInfo();
-        this.getPlaylistById();
-        this.getRandomPlaylist();
+        this.getUserInfo();
+        this.getUserPageInfo();
         this.getComment();
     },
 
@@ -333,19 +309,18 @@ export default {
 </script>
 
 <style>
-.playlistInfoArea {
+.userInfoArea {
     display: flex;
     justify-content: flex-start;
-    /* margin-bottom: 70px; */
 }
 
-.playlistInfo {
+.userInfo {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
-.playlistInfo>p:nth-of-type(2) {
+.userInfo>p:nth-of-type(2) {
     font-size: 60px;
 }
 
@@ -376,22 +351,11 @@ export default {
 }
 
 .commentContent {
-    /* display: flex;
-  flex-direction: column; */
-    /* justify-content: space-between; */
     width: 100%;
-    /* align-self: stretch; */
-    /* flex: 29; */
-    /* align-items: flex-start; */
-}
-
-.commentContent> :nth-child(1) {
-    /* align-self: flex-start; */
 }
 
 .comment-content {
     width: 100%;
-    /* height: 50px; */
     word-break: break-all;
 }
 
@@ -437,8 +401,6 @@ export default {
     justify-content: flex-start;
     cursor: pointer;
 }
-
-.card-right {}
 
 .card-right>p:nth-of-type(1) {
     font-size: 20px;
