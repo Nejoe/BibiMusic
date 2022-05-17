@@ -7,7 +7,8 @@
       <div class="main">
         <el-row>
           <div class="musicInfoArea">
-            <el-image style="width: 225px; height: 225px; margin-right: 20px" :src="musicData.music.cover" lazy>
+            <el-image style="width: 225px; height: 225px; margin-right: 20px;border-radius: 4px;"
+              :src="musicData.music.cover">
             </el-image>
             <div class="musicInfo">
               <p>单曲</p>
@@ -21,13 +22,13 @@
                   {{ musicData.artist }}
                 </el-link> -->
                 <el-link style="margin-left:5px" v-for="(artist, index) in musicData.artist" :key="index"
-                  @click="goArtistDetail(artist.id)">
+                  @click="goDetail(artist.id, 'Artist')">
                   {{ artist.name }}
                 </el-link>
               </div>
               <el-button-group>
                 <el-button type="primary" icon="el-icon-caret-right" @click="playMusic($route.params.id)">播放</el-button>
-                <el-button icon="el-icon-star-off">收藏</el-button>
+                <!-- <el-button icon="el-icon-star-off">收藏</el-button> -->
                 <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论 ({{ totalComment
                 }})</el-button>
                 <el-button icon="el-icon-circle-plus-outline">添加到</el-button>
@@ -54,7 +55,8 @@
                   </div>
                   <div class="commentContent">
                     <div class="comment-content">
-                      <el-link type="primary">{{ comment.nickname }} :</el-link> {{ comment.content }}
+                      <el-link type="primary" @click="goDetail(comment.user_id, 'User')">{{ comment.nickname }} :
+                      </el-link> {{ comment.content }}
                     </div>
                     <!-- 引用的评论
                     <div class="comment-reply"></div> -->
@@ -91,7 +93,7 @@
           <el-col :span="7">
             <h2>包含这首歌的歌单</h2>
             <el-card :body-style="{ padding: '0px' }" v-for="playlist in playlistData" :key="playlist.id" shadow="hover"
-              @click.native="goPlaylistDetail(playlist.id)">
+              @click.native="goDetail(playlist.id, 'Playlist')">
               <img :src="playlist.cover" class="image">
               <div class="card-right">
                 <p>{{ playlist.name }}</p>
@@ -136,18 +138,11 @@ export default {
         behavior: "smooth",
       });
     },
-    goPlaylistDetail(id) {
+    goDetail(id, type) {
       this.$router.push({
-        name: "Playlist",
-        params: { id },
-      });
-    },
-    goArtistDetail(id) {
-      // console.log('歌手id', id);
-      this.$router.push({
-        name: "Artist",
-        params: { id },
-      });
+        name: type,
+        params: { id }
+      })
     },
     currentChange(currentPage) {
       this.currentPage = currentPage;
@@ -270,7 +265,6 @@ export default {
 .musicInfoArea {
   display: flex;
   justify-content: flex-start;
-  /* margin-bottom: 70px; */
 }
 
 .musicInfo {
@@ -310,22 +304,11 @@ export default {
 }
 
 .commentContent {
-  /* display: flex;
-  flex-direction: column; */
-  /* justify-content: space-between; */
   width: 100%;
-  /* align-self: stretch; */
-  /* flex: 29; */
-  /* align-items: flex-start; */
-}
-
-.commentContent> :nth-child(1) {
-  /* align-self: flex-start; */
 }
 
 .comment-content {
   width: 100%;
-  /* height: 50px; */
   font-size: 14px;
   word-break: break-all;
 }
@@ -370,8 +353,6 @@ export default {
   justify-content: flex-start;
   cursor: pointer;
 }
-
-.card-right {}
 
 .card-right>p:nth-of-type(1) {
   font-size: 20px;

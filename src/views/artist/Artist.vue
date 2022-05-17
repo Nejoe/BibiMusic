@@ -7,7 +7,8 @@
             <div class="main">
                 <el-row>
                     <div class="artistInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px" :src="artistData.avatar" lazy>
+                        <el-image style="width: 225px; height: 225px; margin-right: 20px;border-radius: 4px;"
+                            :src="artistData.avatar" lazy>
                         </el-image>
                         <div class="playlistInfo">
                             <p>音乐人</p>
@@ -43,7 +44,7 @@
                             </el-table-column>
                             <el-table-column label="标题" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-link @click="goMusicDetail(scope.row.music_id)">{{ scope.row.music_name }}
+                                    <el-link @click="goDetail(scope.row.music_id, 'Music')">{{ scope.row.music_name }}
                                     </el-link>
                                 </template>
                             </el-table-column>
@@ -73,9 +74,12 @@
                                     <div class="commentContent">
 
                                         <div class="comment-content">
-                                            <el-link type="primary">{{ comment.nickname }} :</el-link> {{
-                                                    comment.content
+                                            <el-link type="primary" @click="goDetail(comment.user_id, 'User')">{{
+                                                    comment.nickname
                                             }}
+                                                :</el-link> {{
+                                                        comment.content
+                                                }}
                                         </div>
                                         <div class="comment-info">
                                             <p class="comment-createTime">{{ comment.createTime }}</p>
@@ -108,7 +112,7 @@
                         <div class="randomArea">
                             <h2>相关歌单推荐</h2>
                             <el-card :body-style="{ padding: '0px' }" v-for="playlist in aboutPlaylist"
-                                :key="playlist.id" shadow="hover" @click.native="goPlaylistDetail(playlist.id)">
+                                :key="playlist.id" shadow="hover" @click.native="goDetail(playlist.id, 'Playlist')">
                                 <img :src="playlist.cover" class="image">
                                 <div class="card-right">
                                     <p>{{ playlist.name }}</p>
@@ -152,18 +156,11 @@ export default {
                 behavior: "smooth",
             });
         },
-        goMusicDetail(id) {
+        goDetail(id, type) {
             this.$router.push({
-                name: "Music",
-                params: { id },
-            });
-        },
-        goPlaylistDetail(id) {
-            console.log(id);
-            this.$router.push({
-                name: "Playlist",
-                params: { id },
-            });
+                name: type,
+                params: { id }
+            })
         },
         currentChange(currentPage) {
             this.currentPage = currentPage;

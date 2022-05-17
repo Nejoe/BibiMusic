@@ -18,8 +18,8 @@
           {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>主页</el-dropdown-item>
-          <el-dropdown-item command="manage" v-if="userInfo.is_admin===1">管理端</el-dropdown-item>
+          <el-dropdown-item command="user">个人主页</el-dropdown-item>
+          <el-dropdown-item command="manage" v-if="userInfo.is_admin === 1">管理端</el-dropdown-item>
           <el-dropdown-item command="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -58,10 +58,16 @@ export default {
         case "manage":
           this.$router.push("/manage");
           break;
+        case "user":
+          this.$router.push({
+            name: 'User',
+            params: { id: this.userInfo.id },
+          });
         default:
           break;
       }
     },
+
   },
   computed: {
     userInfo() {

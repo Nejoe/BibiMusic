@@ -39,7 +39,6 @@ export default {
     methods: {
         handleClick(tab, event) {
         },
-
     },
     watch: {
         'isLogin': function (newVal, oldVal) {
@@ -47,7 +46,6 @@ export default {
                 this.$router.push('/');
             }
         },
-        // 'isLogin'
     },
     mounted() {
     },

@@ -29,8 +29,8 @@
                             <el-button slot="trigger" size="small" type="primary">上传音乐文件</el-button>
                         </el-upload>
                     </el-form-item>
-                    <el-form-item label="歌词" prop="musicLrc">
-                        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="musicAddForm.lrc"
+                    <el-form-item label="歌词lrc" prop="musicLrc">
+                        <el-input type="textarea" :rows="2" placeholder="请输入lrc格式歌词" v-model="musicAddForm.lrc"
                             :autosize="{ minRows: 2, maxRows: 9 }" resize="none">
                         </el-input>
                     </el-form-item>
@@ -138,7 +138,7 @@ export default {
                 }
             })
         },
-        // 上传封面文件
+        // 上传音乐封面文件
         uploadCover() {
             const formData = new FormData();
             formData.append('music_cover', this.coverFile.raw);
@@ -228,8 +228,6 @@ export default {
                 }
             })
         }
-    },
-    mounted() {
     },
 }
 </script>

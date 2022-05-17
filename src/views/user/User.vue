@@ -7,8 +7,8 @@
             <div class="main">
                 <el-row>
                     <div class="userInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px" :src="userData[0].avatar"
-                            lazy>
+                        <el-image style="width: 225px; height: 225px; margin-right: 20px;border-radius: 4px;"
+                            :src="userData[0].avatar" lazy>
                         </el-image>
                         <div class="userInfo">
                             <p>用户</p>
@@ -24,6 +24,7 @@
                                 <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论
                                     ({{ totalComment
                                     }})</el-button>
+                                <el-button icon="el-icon-edit" v-if="is_myPage">编辑个人信息</el-button>
                             </el-button-group>
                         </div>
                     </div>
@@ -44,7 +45,7 @@
                             </el-table-column>
                             <el-table-column label="标题" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-link @click="goDetail(scope.row.id,'Playlist')">{{ scope.row.name
+                                    <el-link @click="goDetail(scope.row.id, 'Playlist')">{{ scope.row.name
                                     }}
                                     </el-link>
                                 </template>
@@ -78,9 +79,11 @@
                                     <div class="commentContent">
 
                                         <div class="comment-content">
-                                            <el-link type="primary">{{ comment.nickname }} :</el-link> {{
-                                                    comment.content
-                                            }}
+                                            <el-link type="primary" @click="goDetail(comment.user_id, 'User')">{{
+                                                    comment.nickname
+                                            }} :</el-link> {{
+        comment.content
+}}
                                         </div>
                                         <div class="comment-info">
                                             <p class="comment-createTime">{{ comment.createTime }}</p>
@@ -146,6 +149,11 @@ export default {
             playlistData: [],
             aboutPlaylist: [],
             comments: [],
+        }
+    },
+    computed: {
+        is_myPage() {
+            return parseInt(this.$route.params.id) === this.$store.state.userInfo.id
         }
     },
     methods: {

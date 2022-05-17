@@ -26,6 +26,8 @@ export default new Vuex.Store({
         },
         // 若本地有登录信息，则state.isLogin为true，否则为false
         isLogin: window.sessionStorage.getItem('userInfo') ? true : false,
+        // 是否该刷新侧边栏，简单解决歌单数据变化后侧边栏不刷新的问题
+        isRefresh: false,
     },
     mutations: {
         //修改当前歌曲
@@ -61,7 +63,7 @@ export default new Vuex.Store({
                 is_admin: 0,
             };
             state.isLogin = false
-        }
+        },
     },
     actions: {
         changeCurrentSong(context, id) {

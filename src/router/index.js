@@ -77,6 +77,8 @@ const routes = [
 //配置VUE-ROUTER
 const router = new VueRouter({
     routes,
+    // history模式
+    // mode: 'history'
 })
 router.beforeEach((to, from, next) => {
     // 管理端路由守护
@@ -87,7 +89,9 @@ router.beforeEach((to, from, next) => {
             next()
         }
     } else if (to.name === 'Login') {
-        if (window.sessionStorage.getItem('userInfo')) {
+        if (!window.sessionStorage.getItem('userInfo')) {
+            next()
+        } else {
             router.push('/')
         }
     } else {

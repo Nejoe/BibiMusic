@@ -7,34 +7,67 @@
             <div class="main">
                 <el-row>
                     <div class="playlistInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px"
-                            :src="playlistInfo[0].playlist_cover">
+                        <el-image style="width: 225px; height: 225px; margin-right: 20px ;border-radius: 4px;"
+                            :src="playlistInfo.playlist_cover ? playlistInfo.playlist_cover : 'http://localhost:3000/upload/images/playlist_cover/default.png'">
                         </el-image>
                         <div class="playlistInfo">
                             <p>歌单</p>
-                            <p>{{ playlistInfo[0].playlist_name }}</p>
+                            <p>{{ playlistInfo.playlist_name }}</p>
                             <div>
                                 <el-icon class="el-icon-user"></el-icon>
-                                <el-link style="margin-left:5px" @click="goDetail(playlistInfo[0].user_id, 'User')">
-                                    {{ playlistInfo[0].creater_name }}
+                                <el-link style="margin-left:5px" @click="goDetail(playlistInfo.user_id, 'User')">
+                                    {{ playlistInfo.creater_name }}
                                 </el-link>
                             </div>
                             <p>
                                 <el-icon class="el-icon-tickets"></el-icon>{{
-                                        playlistInfo[0].description ? playlistInfo[0].description : '暂无描述'
+                                        playlistInfo.description ? playlistInfo.description : '暂无描述'
                                 }}
                             </p>
                             <el-button-group>
                                 <el-button type="primary" icon="el-icon-caret-right"
-                                    @click="changeMusicList(playlistData)">播放全部</el-button>
-                                <el-button icon="el-icon-star-off">收藏</el-button>
-                                <!-- <el-button type="primary" icon="el-icon-star-on">收藏</el-button> -->
-                                <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论
-                                    ({{ totalComment
-                                    }})</el-button>
+                                    @click="changeMusicList(playlistData)" :disabled="is_empty">
+                                    播放全部</el-button>
+                                <el-button :icon="favoriteIcon" :disabled="is_myPlaylist"
+                                    @click="changePlaylistFavorite">
+                                    收藏
+                                </el-button>
+                                <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">
+                                    评论({{ totalComment }})
+                                </el-button>
+                                <el-button icon="el-icon-edit" v-if="is_myPlaylist" @click="handleEdit">
+                                    编辑歌单信息
+                                </el-button>
+                                <el-button type="danger" v-if="is_myPlaylist" @click="handleDelete">删除</el-button>
                             </el-button-group>
                         </div>
                     </div>
+                    <!-- 修改歌单信息框 -->
+                    <el-dialog title="编辑歌单信息" :visible.sync="dialogFormVisible">
+                        <el-form :model="form" :rules="rules" ref="form">
+                            <el-form-item label="歌单名" prop="playlist_name">
+                                <el-input v-model="form.playlist_name" autocomplete="off" maxlength="16"
+                                    show-word-limit></el-input>
+                            </el-form-item>
+                            <el-form-item label="简介" prop="description">
+                                <el-input type="textarea" :rows="2" v-model="form.description"
+                                    :autosize="{ minRows: 2, maxRows: 5 }" maxlength="56" show-word-limit resize="none">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="歌单封面" prop="playlist_cover">
+                                <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadCover"
+                                    :file-list="fileList" :on-change="handleCoverChange"
+                                    :before-upload="beforeCoverUpload" :before-remove="beforeCoverRemove"
+                                    :http-request="uploadCover" list-type="picture">
+                                    <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
+                                </el-upload>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                        </div>
+                    </el-dialog>
                     <div class="musicListArea">
                         <el-table :data="playlistData" stripe style="width: 100%;margin-top: 20px;" v-if="!is_empty">
                             <el-table-column width="50px">
@@ -87,9 +120,8 @@
                                     <div class="commentContent">
 
                                         <div class="comment-content">
-                                            <el-link type="primary">{{ comment.nickname }} :</el-link> {{
-                                                    comment.content
-                                            }}
+                                            <el-link type="primary" @click="goDetail(comment.user_id, 'User')">
+                                                {{ comment.nickname }} :</el-link> {{ comment.content }}
                                         </div>
                                         <div class="comment-info">
                                             <p class="comment-createTime">{{ comment.createTime }}</p>
@@ -152,20 +184,111 @@ export default {
             textarea: "",
             playlistData: [],
             playlistInfo: [{
-                playlist_cover:''
+                playlist_cover: ''
             }],
+            is_favorite: false,
             randomPlaylist: [],
             comments: [],
+            dialogFormVisible: false,
+            form: {
+                playlist_name: '',
+                description: '',
+                playlist_cover: '',
+            },
+            fileList: [],
+            coverFile: {},
+            coverIsUpload: false,
+            rules: {
+                playlist_name: [
+                    { required: true, message: '请输入歌单名称', trigger: 'blur' },
+                    // 正则验证
+                    {
+                        pattern: /^[^@\s#]+$/,
+                        message: '歌单名不能包含@或#或空格',
+                        trigger: 'blur'
+                    },
+                ],
+                description: [
+                    { required: false, message: '请输入歌单描述', trigger: 'blur' },
+                    { min: 0, max: 1000, message: '最多个字符', trigger: 'blur' }
+                ],
+                playlist_cover: [
+                    { required: false, message: '请上传歌单封面', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
+        is_myPlaylist() {
+            return this.playlistInfo.user_id === this.$store.state.userInfo.id;
+        },
+        favoriteIcon() {
+            return this.is_favorite ? 'el-icon-star-on' : 'el-icon-star-off';
+        }
 
     },
     methods: {
+        // 上传相关
+        // 上传音乐封面文件
+        uploadCover() {
+            const formData = new FormData();
+            formData.append('music_cover', this.coverFile.raw);
+            this.$axios({
+                method: 'post',
+                url: '/upload/uploadMusicCover',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                console.log(res.data);
+                if (res.data.code === 200) {
+                    this.form.playlist_cover = 'http://localhost:3000/upload/images/music_cover/' + res.data.obj.filename;
+                    this.coverIsUpload = true;
+                }
+            })
+        },
+        // 文件变动时，标记为未完成，赋值给上传文件
+        handleCoverChange(file, fileList) {
+            this.coverIsUpload = false;
+            this.coverFile = file;
+        },
+        // 验证图片格式
+        beforeCoverUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            return isJPG;
+        },
+        // 文件删除前要清空表单的封面url
+        beforeCoverRemove(file, fileList) {
+            this.form.coverUrl = '';
+            this.coverIsUpload = false;
+        },
         ...mapActions({
             changeMusicList: "changeMusicList",
             playMusic: "changeCurrentSong"
         }),
+        handleEdit() {
+            // 赋值给表单
+            this.form = {
+                playlist_name: this.playlistInfo.playlist_name,
+                description: this.playlistInfo.description,
+                playlist_cover: this.playlistInfo.playlist_cover,
+            }
+            this.dialogFormVisible = true;
+        },
+
+        handleDelete() {
+            this.$confirm('确定删除该歌单？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.deletePlaylist();
+            }).catch(() => { });
+        },
         // 滑动到评论
         goAnchor(selector) {
             this.$refs[selector].scrollIntoView({
@@ -267,8 +390,13 @@ export default {
                 },
             }).then((res) => {
                 if (res.data.code === 200) {
-                    console.log(res.data.obj);
-                    this.playlistInfo = res.data.obj;
+                    this.playlistInfo = res.data.obj[0];
+                    // 歌单不存在，跳转到主页
+                    if (!this.playlistInfo) {
+                        this.$router.push({
+                            name: "Home"
+                        });
+                    }
                 } else {
                     this.$message.error(res.data.msg);
                 }
@@ -284,7 +412,6 @@ export default {
                     playlist_id: this.$route.params.id,
                 },
             }).then((res) => {
-                console.log(res.data);
                 if (res.data.code === 200) {
                     if (res.data.obj.length !== 0) {
                         this.is_empty = false;
@@ -296,6 +423,52 @@ export default {
                     this.$message.error(res.data.msg);
                 }
             });
+        },
+        getIsFavorite() {
+            if (this.$store.state.isLogin) {
+                // 获取是否收藏
+                this.$axios({
+                    method: "GET",
+                    url: "/playlist/getIsFavorite",
+                    params: {
+                        playlist_id: this.$route.params.id,
+                        user_id: this.$store.state.userInfo.id,
+                    },
+                }).then((res) => {
+                    if (res.data.code === 200) {
+                        // 是否收藏
+                        this.is_favorite = (res.data.obj === 1);
+                    } else {
+                        this.$message.error(res.data.msg);
+                    }
+                });
+            } else {
+                this.is_favorite = false;
+            }
+        },
+        changePlaylistFavorite() {
+            // 添加收藏
+            if (this.$store.state.isLogin) {
+                this.$axios({
+                    method: "POST",
+                    url: "/playlist/changePlaylistFavorite",
+                    data: {
+                        playlist_id: this.$route.params.id,
+                        user_id: this.$store.state.userInfo.id,
+                        is_favorite: this.is_favorite ? 1 : 0,
+                    },
+                }).then((res) => {
+                    if (res.data.code === 200) {
+                        this.$store.state.isRefresh = true;
+                        this.getIsFavorite();
+                        this.$message.success(res.data.msg);
+                    } else {
+                        this.$message.error(res.data.msg);
+                    }
+                });
+            } else {
+                this.$message.error("请先登录再收藏歌单");
+            }
         },
         getRandomPlaylist() {
             // 获取随机歌单，传入该页面的id，防止获取到自己的歌单
@@ -309,13 +482,74 @@ export default {
             }).then((res) => {
                 this.randomPlaylist = res.data.obj;
             });
-        }
-
+        },
+        updatePlaylist() {
+            this.$axios({
+                method: "POST",
+                url: "/playlist/updatePlaylist",
+                data: {
+                    playlist_id: this.$route.params.id,
+                    playlist_name: this.form.playlist_name,
+                    description: this.form.description,
+                    playlist_cover: this.form.playlist_cover,
+                },
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    this.$message.success(res.data.msg);
+                    this.dialogFormVisible = false;
+                    this.fileList = [];
+                    this.getPlaylistInfo();
+                    // 刷新侧边栏
+                    this.$store.state.isRefresh = true;
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            });
+        },
+        deletePlaylist() {
+            this.$axios({
+                url: "/playlist/deletePlaylist",
+                method: "post",
+                data: {
+                    playlist_id: this.$route.params.id,
+                },
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    this.$message.success(res.data.msg);
+                    // 刷新侧边栏，删除歌单后，跳转到主页
+                    this.$store.state.isRefresh = true;
+                    this.$router.push({
+                        name: "Home"
+                    });
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            });
+        },
+        // 提交表单
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.updatePlaylist();
+                } else {
+                    this.$message({
+                        message: '请补全信息',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            });
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
     },
     watch: {
         // 路由变化时，获取歌单信息
         "$route.params.id": function () {
             this.getPlaylistInfo();
+            this.getIsFavorite();
             this.getPlaylistById();
             this.getComment();
             this.getRandomPlaylist();
@@ -323,6 +557,7 @@ export default {
     },
     mounted() {
         this.getPlaylistInfo();
+        this.getIsFavorite();
         this.getPlaylistById();
         this.getRandomPlaylist();
         this.getComment();
