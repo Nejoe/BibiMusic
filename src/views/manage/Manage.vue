@@ -5,10 +5,10 @@
         </el-header>
         <el-main>
             <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-                <el-tab-pane label="歌曲管理" name="first">
+                <el-tab-pane label="新增歌曲" name="first">
                     <music-manage></music-manage>
                 </el-tab-pane>
-                <el-tab-pane label="歌手管理" name="second">
+                <el-tab-pane label="新增歌手" name="second">
                     <artist-manage></artist-manage>
                 </el-tab-pane>
             </el-tabs>

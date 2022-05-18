@@ -212,28 +212,8 @@ export default {
     },
   },
   watch: {
-    //  监听登录状态
-    // "$store.state.isLogin": function (newVal, oldVal) {
-    //   if (newVal) {
-    //     this.$message({
-    //       message: '登录成功',
-    //       type: 'success'
-    //     });
-    //     this.$router.push("/");
-    //   }
-    //   if(!newVal){
-    //     this.$message({
-    //       message: '登录失败',
-    //       type: 'error'
-    //     });
-    //   }
-    // },
   },
   mounted() {
-    // 判断是否登录
-    // if (this.$store.state.isLogin) {
-    //   this.$router.push("/discover");
-    // }
   },
 };
 </script>

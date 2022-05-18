@@ -7,7 +7,8 @@
             <div class="main">
                 <el-row>
                     <div class="playlistInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px ;border-radius: 4px;"
+                        <el-image fit="cover"
+                            style="width: 225px; height: 225px; margin-right: 20px ;border-radius: 4px;"
                             :src="playlistInfo.playlist_cover ? playlistInfo.playlist_cover : 'http://localhost:3000/upload/images/playlist_cover/default.png'">
                         </el-image>
                         <div class="playlistInfo">
@@ -28,7 +29,7 @@
                                 <el-button type="primary" icon="el-icon-caret-right"
                                     @click="changeMusicList(playlistData)" :disabled="is_empty">
                                     播放全部</el-button>
-                                <el-button :icon="favoriteIcon" :disabled="is_myPlaylist"
+                                <el-button :icon="favoriteIcon" :disabled="is_okToFavorite"
                                     @click="changePlaylistFavorite">
                                     收藏
                                 </el-button>
@@ -43,10 +44,10 @@
                         </div>
                     </div>
                     <!-- 修改歌单信息框 -->
-                    <el-dialog title="编辑歌单信息" :visible.sync="dialogFormVisible">
+                    <el-dialog title="编辑歌单信息" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
                         <el-form :model="form" :rules="rules" ref="form">
                             <el-form-item label="歌单名" prop="playlist_name">
-                                <el-input v-model="form.playlist_name" autocomplete="off" maxlength="16"
+                                <el-input v-model="form.playlist_name" autocomplete="off" maxlength="40"
                                     show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item label="简介" prop="description">
@@ -94,6 +95,14 @@
                                     <el-link @click="goDetail(scope.row.artist_id, 'Artist')">{{ scope.row.artist_name
                                     }}
                                     </el-link>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" :show-overflow-tooltip="true" v-if="is_myPlaylist">
+                                <template slot-scope="scope">
+                                    <el-button type="danger" size="small" @click="handleMusicDelete(scope.row.music_id)"
+                                        plain>
+                                        移除
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -176,6 +185,15 @@ export default {
     name: "Playlist",
     components: { NavBar },
     data() {
+        const validateName = (rule, value, callback) => {
+            if (value.includes('@') || value.includes('#')) {
+                callback('歌单标题不能包含@和#');
+            } else if (value.trim() === '') {
+                callback('歌单标题不能为空');
+            } else {
+                callback();
+            }
+        };
         return {
             is_empty: true,
             currentPage: 1,
@@ -203,24 +221,20 @@ export default {
                     { required: true, message: '请输入歌单名称', trigger: 'blur' },
                     // 正则验证
                     {
-                        pattern: /^[^@\s#]+$/,
+                        validator: validateName,
                         message: '歌单名不能包含@或#或空格',
                         trigger: 'blur'
                     },
-                ],
-                description: [
-                    { required: false, message: '请输入歌单描述', trigger: 'blur' },
-                    { min: 0, max: 1000, message: '最多个字符', trigger: 'blur' }
-                ],
-                playlist_cover: [
-                    { required: false, message: '请上传歌单封面', trigger: 'blur' }
                 ]
             }
         }
     },
     computed: {
         is_myPlaylist() {
-            return this.playlistInfo.user_id === this.$store.state.userInfo.id;
+            return this.playlistInfo.user_id === this.$store.state.userInfo.id || this.$store.state.userInfo.is_admin === 1;
+        },
+        is_okToFavorite() {
+            return this.playlistInfo.user_id === this.$store.state.userInfo.id
         },
         favoriteIcon() {
             return this.is_favorite ? 'el-icon-star-on' : 'el-icon-star-off';
@@ -232,10 +246,10 @@ export default {
         // 上传音乐封面文件
         uploadCover() {
             const formData = new FormData();
-            formData.append('music_cover', this.coverFile.raw);
+            formData.append('playlist_cover', this.coverFile.raw);
             this.$axios({
                 method: 'post',
-                url: '/upload/uploadMusicCover',
+                url: '/upload/uploadPlaylistCover',
                 data: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -243,7 +257,7 @@ export default {
             }).then(res => {
                 console.log(res.data);
                 if (res.data.code === 200) {
-                    this.form.playlist_cover = 'http://localhost:3000/upload/images/music_cover/' + res.data.obj.filename;
+                    this.form.playlist_cover = 'http://localhost:3000/upload/images/playlist_cover/' + res.data.obj.filename;
                     this.coverIsUpload = true;
                 }
             })
@@ -256,10 +270,17 @@ export default {
         // 验证图片格式
         beforeCoverUpload(file) {
             const isJPG = file.type === 'image/jpeg';
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isJPG && !isPNG) {
+                this.$message.error('上传歌单图片只能是 JPG 或 PNG 格式!');
+                return false;
+            } else if (!isLt2M) {
+                this.$message.error('上传歌单图片大小不能超过 2MB!');
+                return false;
+            } else {
+                return true;
             }
-            return isJPG;
         },
         // 文件删除前要清空表单的封面url
         beforeCoverRemove(file, fileList) {
@@ -287,6 +308,15 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.deletePlaylist();
+            }).catch(() => { });
+        },
+        handleMusicDelete(music_id) {
+            this.$confirm('确定删除该歌曲？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.deleteMusic(music_id);
             }).catch(() => { });
         },
         // 滑动到评论
@@ -526,6 +556,23 @@ export default {
                 }
             });
         },
+        deleteMusic(music_id) {
+            this.$axios({
+                url: "/playlist/deleteMusic",
+                method: "post",
+                data: {
+                    playlist_id: this.$route.params.id,
+                    music_id: music_id,
+                },
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    this.$message.success(res.data.msg);
+                    this.getPlaylistById();
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            });
+        },
         // 提交表单
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -578,10 +625,12 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width: 800px;
 }
 
 .playlistInfo>p:nth-of-type(2) {
     font-size: 60px;
+    line-height: 50px;
 }
 
 .commentArea {

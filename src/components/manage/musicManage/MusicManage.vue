@@ -1,46 +1,45 @@
 <template>
     <div>
-        <el-tabs v-model="activeName">
-            <el-tab-pane label="新增歌曲" name="first">
-                <el-form :model="musicAddForm" :rules="musicAddRules" ref="musicAddForm" label-width="100px">
-                    <el-form-item label="歌曲标题" prop="musicName">
-                        <el-input v-model="musicAddForm.musicName" placeholder="请输入歌曲名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="歌手" prop="artistId">
-                        <el-select v-model="musicAddForm.artistId" placeholder="请选择歌手" @click.native="getAllArtistName"
-                            clearable>
-                            <el-option v-for="item in artistList" :key="item.id" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="音乐封面" prop="coverUrl">
-                        <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadCover" :file-list="fileList"
-                            :on-change="handleCoverChange" :before-upload="beforeCoverUpload"
-                            :before-remove="beforeCoverRemove" :on-success="handleMusicSuccess"
-                            :http-request="uploadCover" list-type="picture">
-                            <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
-                        </el-upload>
-                    </el-form-item>
-                    <el-form-item label="音乐文件" prop="musicUrl">
-                        <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadMusic" :file-list="fileList"
-                            :on-change="handleMusicChange" :before-upload="beforeMusicUpload"
-                            :before-remove="beforeMusicRemove" :on-success="handleMusicSuccess"
-                            :http-request="uploadMusic">
-                            <el-button slot="trigger" size="small" type="primary">上传音乐文件</el-button>
-                        </el-upload>
-                    </el-form-item>
-                    <el-form-item label="歌词lrc" prop="musicLrc">
-                        <el-input type="textarea" :rows="2" placeholder="请输入lrc格式歌词" v-model="musicAddForm.lrc"
-                            :autosize="{ minRows: 2, maxRows: 9 }" resize="none">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm('musicAddForm')">提交</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-tab-pane>
-            <el-tab-pane label="修改歌曲" name="second">修改歌曲</el-tab-pane>
-        </el-tabs>
+        <el-form :model="musicAddForm" :rules="musicAddRules" ref="musicAddForm" label-width="100px">
+            <el-form-item label="歌曲标题" prop="musicName">
+                <el-input v-model="musicAddForm.musicName" placeholder="请输入歌曲名称"></el-input>
+            </el-form-item>
+            <el-form-item label="歌手" prop="artistId">
+                <el-select v-model="musicAddForm.artistId" placeholder="请选择歌手" @click.native="getAllArtistName"
+                    clearable>
+                    <el-option v-for="item in artistList" :key="item.id" :label="item.name" :value="item.id">
+                        <div style="display:flex; align-items:center">
+                            <el-image :src="item.avatar"
+                                style="width: 30px;height: 30px;border-radius: 4px;margin-right: 5px;">
+                            </el-image>
+                            <span v-text="item.name"></span>
+                        </div>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="音乐封面" prop="coverUrl">
+                <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadCover" :file-list="fileList"
+                    :on-change="handleCoverChange" :before-upload="beforeCoverUpload" :before-remove="beforeCoverRemove"
+                    :on-success="handleMusicSuccess" :http-request="uploadCover" list-type="picture">
+                    <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
+                </el-upload>
+            </el-form-item>
+            <el-form-item label="音乐文件" prop="musicUrl">
+                <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadMusic" :file-list="fileList"
+                    :on-change="handleMusicChange" :before-upload="beforeMusicUpload" :before-remove="beforeMusicRemove"
+                    :on-success="handleMusicSuccess" :http-request="uploadMusic">
+                    <el-button slot="trigger" size="small" type="primary">上传音乐文件</el-button>
+                </el-upload>
+            </el-form-item>
+            <el-form-item label="歌词lrc" prop="musicLrc">
+                <el-input type="textarea" :rows="2" placeholder="请输入lrc格式歌词" v-model="musicAddForm.lrc"
+                    :autosize="{ minRows: 2, maxRows: 8 }" resize="none">
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('musicAddForm')">提交</el-button>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -49,7 +48,6 @@ export default {
     name: 'MusicManage',
     data() {
         return {
-            activeName: 'first',
             fileList: [],
             musicFile: {},
             coverFile: {},
@@ -188,7 +186,6 @@ export default {
                 this.$message.error('上传音乐文件只能是 MP3 格式!');
             }
             return isMP3;
-
         },
         // 文件删除前钩子
         beforeCoverRemove(file, fileList) {
@@ -217,12 +214,12 @@ export default {
                 if (res.data.code === 200) {
                     this.resetForm('musicAddForm');
                     this.$message({
-                        message: 'res.data.msg',
+                        message: res.data.msg,
                         type: 'success'
                     });
                 } else {
                     this.$message({
-                        message: 'res.data.msg',
+                        message: res.data.msg,
                         type: 'error'
                     });
                 }

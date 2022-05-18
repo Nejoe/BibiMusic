@@ -80,7 +80,7 @@
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true">
                       <template slot-scope="scope">
-                        <el-link @click="goDetail(scope.row.user_id, 'User')">by {{ scope.row.user_name }}</el-link>
+                        <el-link @click="goDetail(scope.row.user_id, 'User')">by {{ scope.row.user_name }}#{{scope.row.user_id}}</el-link>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -95,15 +95,20 @@
                         </el-image>
                       </template>
                     </el-table-column>
+                    <el-table-column label="UID" :show-overflow-tooltip="true" width="50px">
+                      <template slot-scope="scope">
+                        #{{ scope.row.user_id }}
+                      </template>
+                    </el-table-column>
                     <el-table-column :label="search_note" :show-overflow-tooltip="true">
                       <template slot-scope="scope">
                         <el-link @click="goDetail(scope.row.user_id, 'User')">{{ scope.row.user_name }}
                         </el-link>
                       </template>
                     </el-table-column>
-                    <el-table-column label="简介" :show-overflow-tooltip="true">
+                    <el-table-column label="个人介绍" :show-overflow-tooltip="true">
                       <template slot-scope="scope">
-                        {{ scope.row.description ? scope.row.description : '暂无简介' }}
+                        {{ scope.row.description ? scope.row.description : '暂无介绍' }}
                       </template>
                     </el-table-column>
                   </el-table>
@@ -222,8 +227,9 @@ export default {
               type: 'warning'
             });
           }
+          this.loading = false;
         }
-        this.loading = false;
+
       })
     }
   },

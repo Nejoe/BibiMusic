@@ -7,8 +7,9 @@
             <div class="main">
                 <el-row>
                     <div class="artistInfoArea">
-                        <el-image style="width: 225px; height: 225px; margin-right: 20px;border-radius: 4px;"
-                            :src="artistData.avatar" lazy>
+                        <el-image fit="cover"
+                            style="width: 225px; height: 225px; margin-right: 20px;border-radius: 4px;" :src="coverInfo"
+                            lazy>
                         </el-image>
                         <div class="playlistInfo">
                             <p>音乐人</p>
@@ -24,9 +25,36 @@
                                 <el-button icon="el-icon-chat-dot-round" @click="goAnchor('comment')">评论
                                     ({{ totalComment
                                     }})</el-button>
+                                <el-button icon="el-icon-edit" v-if="$store.state.userInfo.is_admin === 1"
+                                    @click="handleEdit">编辑歌手信息</el-button>
                             </el-button-group>
                         </div>
                     </div>
+                    <!-- 修改歌手信息框 -->
+                    <el-dialog title="编辑歌手信息" :visible.sync="dialogFormVisible">
+                        <el-form :model="form" :rules="rules" ref="form">
+                            <el-form-item label="歌手名" prop="artist_name">
+                                <el-input v-model="form.artist_name" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="介绍" prop="description">
+                                <el-input type="textarea" :rows="2" v-model="form.description"
+                                    :autosize="{ minRows: 2, maxRows: 5 }" maxlength="56" show-word-limit resize="none">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="头像" prop="avatar">
+                                <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadCover"
+                                    :file-list="fileList" :on-change="handleCoverChange"
+                                    :before-upload="beforeCoverUpload" :before-remove="beforeCoverRemove"
+                                    :http-request="uploadCover" list-type="picture">
+                                    <el-button slot="trigger" size="small" type="primary">上传头像文件</el-button>
+                                </el-upload>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                        </div>
+                    </el-dialog>
                     <div class="musicListArea">
                         <el-table :data="musicList" stripe style="width: 100%;margin-top: 20px;">
                             <el-table-column width="50px">
@@ -134,6 +162,13 @@ export default {
     name: "Playlist",
     components: { NavBar },
     data() {
+        const checkName = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error("请输入歌手名"));
+            } else {
+                callback();
+            }
+        };
         return {
             currentPage: 1,
             pageSize: 10,
@@ -143,13 +178,88 @@ export default {
             musicList: [],
             aboutPlaylist: [],
             comments: [],
+            dialogFormVisible: false,
+            fileList: [],
+            form: {
+                user_name: '',
+                description: '',
+                avatar: '',
+            },
+            rules: {
+                artist_name: [
+                    { required: true, message: '请输入昵称', trigger: 'blur' },
+                    { validator: checkName, trigger: 'blur' },
+                ],
+                description: [
+                    { min: 0, max: 300, message: '最多300个字符', trigger: 'blur' }
+                ],
+            },
+        }
+    },
+    computed: {
+        coverInfo() {
+            return this.artistData.avatar ? this.artistData.avatar : 'http://localhost:3000/upload/images/artist_avatar/default.png';
         }
     },
     methods: {
+        // 上传相关
+        // 上传用户头像文件
+        uploadCover() {
+            const formData = new FormData();
+            formData.append('artist_avatar', this.coverFile.raw);
+            this.$axios({
+                method: 'post',
+                url: '/upload/uploadArtistAvatar',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                if (res.data.code === 200) {
+                    this.form.avatar = 'http://localhost:3000/upload/images/artist_avatar/' + res.data.obj.filename;
+                    this.coverIsUpload = true;
+                }
+            })
+        },
+        // 文件变动时，标记为未完成，赋值给上传文件
+        handleCoverChange(file, fileList) {
+            this.coverIsUpload = false;
+            this.coverFile = file;
+        },
+        // 验证图片格式
+        beforeCoverUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isJPG && !isPNG) {
+                this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
+                return false;
+            } else if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+                return false;
+            } else {
+                return true;
+            }
+        },
+        // 文件删除前要清空表单的封面url
+        beforeCoverRemove(file, fileList) {
+            this.form.avatar = '';
+            this.coverIsUpload = false;
+        },
         ...mapActions({
             changeMusicList: "changeMusicList",
             playMusic: "changeCurrentSong"
         }),
+        handleEdit() {
+            // 赋值给表单
+            this.form = {
+                artist_name: this.artistData.artist_name,
+                description: this.artistData.description,
+                avatar: this.artistData.avatar,
+            }
+            this.fileList=[];
+            this.dialogFormVisible = true;
+        },
         // 滑动到评论
         goAnchor(selector) {
             this.$refs[selector].scrollIntoView({
@@ -251,12 +361,10 @@ export default {
             }).then((res) => {
                 if (res.data.code === 200) {
                     this.artistData = res.data.obj[0];
-                    console.log(this.artistData);
                 } else {
                     this.$message.error(res.data.msg);
                 }
             });
-
         },
         getMusicByArtistId() {
             // 获取歌曲信息
@@ -267,7 +375,6 @@ export default {
                     artist_id: this.$route.params.id,
                 },
             }).then((res) => {
-                console.log(res.data);
                 this.musicList = res.data.obj;
             });
         },
@@ -281,10 +388,48 @@ export default {
                     limit: 3,
                 },
             }).then((res) => {
-                console.log('相关歌单', res.data);
                 this.aboutPlaylist = res.data.obj;
             });
-        }
+        },
+        updateArtist() {
+            this.$axios({
+                method: "POST",
+                url: "/artist/updateArtist",
+                data: {
+                    artistId: this.$route.params.id,
+                    artistName: this.form.artist_name,
+                    description: this.form.description,
+                    avatar: this.form.avatar,
+                },
+            }).then((res) => {
+                if (res.data.code === 200) {
+                    this.$message.success(res.data.msg);
+                    this.dialogFormVisible = false;
+                    this.getArtistById();
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            })
+
+        },
+        // 提交表单
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.updateArtist();
+                } else {
+                    this.$message({
+                        message: '请补全信息',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            });
+        },
+        // 重置表单
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
 
     },
     watch: {
@@ -302,8 +447,6 @@ export default {
         this.getAboutPlaylist();
         this.getComment();
     },
-
-
 }
 </script>
 
@@ -317,10 +460,12 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width: 800px;
 }
 
 .playlistInfo>p:nth-of-type(2) {
     font-size: 60px;
+    line-height: 50px;
 }
 
 .commentArea {

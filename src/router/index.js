@@ -83,13 +83,13 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     // 管理端路由守护
     if (to.name === 'Manage') {
-        if (!window.sessionStorage.getItem('userInfo') || JSON.parse(window.sessionStorage.getItem('userInfo')).is_admin === 0) {
+        if (!window.localStorage.getItem('userInfo') || JSON.parse(window.localStorage.getItem('userInfo')).is_admin === 0) {
             router.push('/')
         } else {
             next()
         }
     } else if (to.name === 'Login') {
-        if (!window.sessionStorage.getItem('userInfo')) {
+        if (!window.localStorage.getItem('userInfo')) {
             next()
         } else {
             router.push('/')

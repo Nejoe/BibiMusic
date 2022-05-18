@@ -1,26 +1,25 @@
 <template>
     <div>
-        <el-tabs v-model="activeName">
-            <el-tab-pane label="新增歌手" name="first">
-                <el-form :model="artistAddForm" :rules="artistAddRules" ref="artistAddForm" label-width="100px">
-                    <el-form-item label="名字" prop="artistName">
-                        <el-input v-model="artistAddForm.artistName" placeholder="请输入歌手名称"></el-input>
-                    </el-form-item>
-                    <!-- <el-form-item label="歌手" prop="artistId">
+
+        <el-form :model="artistAddForm" :rules="artistAddRules" ref="artistAddForm" label-width="100px">
+            <el-form-item label="名字" prop="artistName">
+                <el-input v-model="artistAddForm.artistName" placeholder="请输入歌手名称"></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="歌手" prop="artistId">
                         <el-select v-model="artistAddForm.artistId" placeholder="请选择歌手" clearable>
                             <el-option v-for="item in artistList" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item> -->
-                    <el-form-item label="头像" prop="avatarUrl">
-                        <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadAvatar" :file-list="fileList"
-                            :on-change="handleAvatarChange" :before-upload="beforeAvatarUpload"
-                            :before-remove="beforeAvatarRemove" :on-success="handleMusicSuccess"
-                            :http-request="uploadAvatar" list-type="picture">
-                            <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
-                        </el-upload>
-                    </el-form-item>
-                    <!-- <el-form-item label="音乐文件" prop="musicUrl">
+            <el-form-item label="头像" prop="avatarUrl">
+                <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadAvatar" :file-list="fileList"
+                    :on-change="handleAvatarChange" :before-upload="beforeAvatarUpload"
+                    :before-remove="beforeAvatarRemove" :on-success="handleMusicSuccess" :http-request="uploadAvatar"
+                    list-type="picture">
+                    <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
+                </el-upload>
+            </el-form-item>
+            <!-- <el-form-item label="音乐文件" prop="musicUrl">
                         <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadMusic" :file-list="fileList"
                             :on-change="handleMusicChange" :before-upload="beforeMusicUpload"
                             :before-remove="beforeMusicRemove" :on-success="handleMusicSuccess"
@@ -28,18 +27,15 @@
                             <el-button slot="trigger" size="small" type="primary">上传音乐文件</el-button>
                         </el-upload>
                     </el-form-item> -->
-                    <el-form-item label="介绍" prop="description">
-                        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="artistAddForm.description"
-                            :autosize="{ minRows: 2, maxRows: 9 }" resize="none">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm('artistAddForm')">提交</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-tab-pane>
-            <el-tab-pane label="修改歌手" name="second">修改歌手</el-tab-pane>
-        </el-tabs>
+            <el-form-item label="介绍" prop="description">
+                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="artistAddForm.description"
+                    :autosize="{ minRows: 2, maxRows: 9 }" resize="none">
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('artistAddForm')">提交</el-button>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -48,7 +44,6 @@ export default {
     name: 'ArtistManage',
     data() {
         return {
-            activeName: 'first',
             fileList: [],
             musicFile: {},
             avatarFile: {},

@@ -9,12 +9,14 @@
       </button>
     </div>
     <!-- 根据是否登录展示用户信息 -->
-    <div class="user" v-if="!isLogin">
+    <div v-if="!isLogin">
       <button class="login-btn" @click="login">登录/注册</button>
     </div>
-    <div class="user info" v-else>
+    <div class="info" v-else>
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
+          <el-avatar shape="circle" size="large" :src="userInfo.avatar" fit="cover" style="padding-right:5px;">
+          </el-avatar>
           {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -32,6 +34,7 @@ export default {
   name: "NavBar",
   data() {
     return {
+      userData: {}
     };
   },
   methods: {
@@ -67,7 +70,29 @@ export default {
           break;
       }
     },
+    getUserInfo() {
+      this.$axios({
+        url: "/user/getUserInfo",
+        method: "get",
+        params: {
+          user_id: this.$route.params.id,
+        },
+      }).then((res) => {
+        if (res.data.code === 200) {
+          const newInfo = {
+            id: res.data.obj[0].user_id,
+            account: this.$store.state.userInfo.account,
+            name: res.data.obj[0].user_name,
+            is_admin: res.data.obj[0].is_admin,
+            avatar: res.data.obj[0].avatar,
+          }
+          this.$store.commit('setUserInfo', newInfo);
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
 
+    },
   },
   computed: {
     userInfo() {
@@ -77,6 +102,15 @@ export default {
       return this.$store.state.isLogin;
     }
   },
+  watch: {
+    // 用户信息修改后会修改state中的是否刷新导航栏的状态
+    '$store.state.isUserRefresh': function (newVal, oldVal) {
+      if (newVal === true) {
+        this.getUserInfo();
+      }
+      this.$store.state.isUserRefresh = false;
+    }
+  }
 };
 </script>
 <style >
@@ -98,7 +132,6 @@ export default {
   border: none;
   border-radius: 50%;
   background-color: #EBEEF5;
-  /* background-color: #DCDFE6; */
   cursor: pointer;
 }
 
@@ -124,17 +157,20 @@ export default {
 }
 
 .el-dropdown-link {
-  /* color: black; */
+  display: flex;
+  align-items: center;
 }
 
 .info {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  height: 30px;
-  width: 80px;
-  border-radius: 15px;
+  /* width: 300px; */
+  /* height: 30px; */
+  /* padding-left: 10px; */
+  padding-right: 10px;
+  border-radius: 50px;
   background-color: #EBEEF5;
   color: #303133;
   cursor: pointer;
