@@ -31,7 +31,7 @@
                     <el-button slot="trigger" size="small" type="primary">上传音乐文件</el-button>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="歌词lrc" prop="musicLrc">
+            <el-form-item label="歌词lrc" prop="lrc">
                 <el-input type="textarea" :rows="2" placeholder="请输入lrc格式歌词" v-model="musicAddForm.lrc"
                     :autosize="{ minRows: 2, maxRows: 8 }" resize="none">
                 </el-input>
@@ -174,8 +174,9 @@ export default {
         beforeCoverUpload(file) {
             // 验证图片格式
             const isJPG = file.type === 'image/jpeg';
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+            const isPNG = file.type === 'image/png';
+            if (!isJPG&&!isPNG) {
+                this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
             }
             return isJPG;
         },
@@ -212,7 +213,9 @@ export default {
             }).then(res => {
                 console.log(res);
                 if (res.data.code === 200) {
+                    // 重置表单
                     this.resetForm('musicAddForm');
+                    this.fileList = [];
                     this.$message({
                         message: res.data.msg,
                         type: 'success'

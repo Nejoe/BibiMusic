@@ -12,7 +12,7 @@
                             :src="'/api' + userData.avatar" :lazy="true">
                         </el-image>
                         <div class="userInfo">
-                            <p>用户UID：{{ userData.user_id }}</p>
+                            <p>UID:{{ userData.user_id }}</p>
                             <p>{{ userData.user_name }}</p>
                             <p>
                                 <el-icon class="el-icon-tickets"></el-icon>{{
