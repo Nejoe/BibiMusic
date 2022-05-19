@@ -124,8 +124,11 @@ export default {
             const isPNG = file.type === 'image/png';
             if (!isJPG && !isPNG) {
                 this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
+                return false;
+            } else {
+                return true;
             }
-            return isJPG || isPNG;
+
         },
         // 文件删除前钩子
         beforeAvatarRemove(file, fileList) {

@@ -183,10 +183,13 @@ export default {
         beforeMusicUpload(file) {
             // 验证音乐格式
             const isMP3 = (file.type === 'audio/mp3') || (file.type === 'audio/mpeg');
-            if (!isMP3) {
-                this.$message.error('上传音乐文件只能是 MP3 格式!');
+            const isWAV = file.type === 'audio/wav';
+            if (!isMP3&&!isWAV) {
+                this.$message.error('上传音乐文件只能是 MP3/WAV 格式!');
+                return false;
+            }else{
+                return true;
             }
-            return isMP3;
         },
         // 文件删除前钩子
         beforeCoverRemove(file, fileList) {
