@@ -159,7 +159,7 @@
                         </div>
                     </el-col>
                     <el-col :span="7">
-                        <h2 v-if="playlistData.length">包含这首歌的歌单</h2>
+                        <h2>包含这首歌的歌单</h2>
                         <el-card :body-style="{ padding: '0px' }" v-for="playlist in playlistData" :key="playlist.id"
                             shadow="hover" @click.native="goDetail(playlist.id, 'Playlist')">
                             <img :src="'/api' + playlist.cover" class="image">
