@@ -19,42 +19,43 @@ router.post('/register', (req, res) => {
                     msg: '账号已存在'
                 })
             } else {
-                // 查找是否有重复的昵称
-                const sql2 = 'SELECT * FROM user WHERE name=?';
-                const values2 = [req.body.name];
-                query(sql2, values2, (err, data2) => {
+                // 插入数据
+                const sql3 = `INSERT INTO user (account, password, name, is_admin ,avatar) VALUES (?, ?, ?,0,'http://localhost:3000/upload/images/user_avatar/default.png')`;
+                const values3 = [req.body.account, req.body.password, req.body.name];
+                query(sql3, values3, (err, data3) => {
                     if (err) {
                         res.json({
                             code: 500,
-                            msg: '查询重复昵称错误'
+                            msg: '注册失败'
                         })
                     } else {
-                        console.log(data2);
-                        if (data2.length > 0) {
-                            res.json({
-                                code: 202,
-                                msg: '昵称已存在'
-                            })
-                        } else {
-                            // 插入数据
-                            const sql3 = `INSERT INTO user (account, password, name, is_admin ,avatar) VALUES (?, ?, ?,0,'http://localhost:3000/upload/images/user_avatar/default.png')`;
-                            const values3 = [req.body.account, req.body.password, req.body.name];
-                            query(sql3, values3, (err, data3) => {
-                                if (err) {
-                                    res.json({
-                                        code: 500,
-                                        msg: '注册失败'
-                                    })
-                                } else {
-                                    res.json({
-                                        code: 200,
-                                        msg: '注册成功'
-                                    })
-                                }
-                            });
-                        }
+                        res.json({
+                            code: 200,
+                            msg: '注册成功'
+                        })
                     }
-                })
+                });
+                // // 查找是否有重复的昵称
+                // const sql2 = 'SELECT * FROM user WHERE name=?';
+                // const values2 = [req.body.name];
+                // query(sql2, values2, (err, data2) => {
+                //     if (err) {
+                //         res.json({
+                //             code: 500,
+                //             msg: '查询重复昵称错误'
+                //         })
+                //     } else {
+                //         console.log(data2);
+                //         if (data2.length > 0) {
+                //             res.json({
+                //                 code: 202,
+                //                 msg: '昵称已存在'
+                //             })
+                //         } else {
+
+                //         }
+                //     }
+                // })
             }
         }
     });
