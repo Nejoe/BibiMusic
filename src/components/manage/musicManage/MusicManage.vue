@@ -178,7 +178,7 @@ export default {
             if (!isJPG&&!isPNG) {
                 this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
             }
-            return isJPG;
+            return isJPG || isPNG;
         },
         beforeMusicUpload(file) {
             // 验证音乐格式

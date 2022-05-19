@@ -45,7 +45,7 @@
                     <el-table-column width="80px">
                       <template slot-scope="scope">
                         <el-image style="width: 50px; height: 50px; margin-right: 20px; border-radius: 5px;"
-                          :src="scope.row.avatar">
+                          :src="'/api' + scope.row.avatar">
                         </el-image>
                       </template>
                     </el-table-column>
@@ -68,7 +68,7 @@
                     <el-table-column width="80px">
                       <template slot-scope="scope">
                         <el-image style="width: 50px; height: 50px; margin-right: 20px; border-radius: 5px;"
-                          :src="scope.row.cover">
+                          :src="'/api' + scope.row.cover">
                         </el-image>
                       </template>
                     </el-table-column>
@@ -80,7 +80,8 @@
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true">
                       <template slot-scope="scope">
-                        <el-link @click="goDetail(scope.row.user_id, 'User')">by {{ scope.row.user_name }}#{{scope.row.user_id}}</el-link>
+                        <el-link @click="goDetail(scope.row.user_id, 'User')">by {{ scope.row.user_name
+                        }}#{{ scope.row.user_id }}</el-link>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -91,7 +92,7 @@
                     <el-table-column width="80px">
                       <template slot-scope="scope">
                         <el-image style="width: 50px; height: 50px; margin-right: 20px; border-radius: 5px;"
-                          :src="scope.row.avatar">
+                          :src="'/api' + scope.row.avatar">
                         </el-image>
                       </template>
                     </el-table-column>

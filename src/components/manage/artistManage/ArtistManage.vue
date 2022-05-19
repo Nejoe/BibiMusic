@@ -8,8 +8,7 @@
             <el-form-item label="头像" prop="avatarUrl">
                 <el-upload action="#" :auto-upload="true" :limit="1" ref="uploadAvatar" :file-list="fileList"
                     :on-change="handleAvatarChange" :before-upload="beforeAvatarUpload"
-                    :before-remove="beforeAvatarRemove" :on-success="handleMusicSuccess" :http-request="uploadAvatar"
-                    list-type="picture">
+                    :before-remove="beforeAvatarRemove" :http-request="uploadAvatar" list-type="picture">
                     <el-button slot="trigger" size="small" type="primary">上传封面文件</el-button>
                 </el-upload>
             </el-form-item>
@@ -35,8 +34,8 @@ export default {
             avatarFile: {},
             artistAddForm: {
                 artistName: '',
-                description: '',
                 avatarUrl: '',
+                description: '',
             },
             // musicIsUpload: false,
             avatarIsUpload: false,
@@ -86,38 +85,9 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        // 提交上传
-        submitUpload(type) {
-            switch (type) {
-                case 'uploadMusic':
-                    this.$refs.uploadMusic.submit();
-                    break;
-                case 'uploadAvatar':
-                    this.$refs.uploadAvatar.submit();
-                    break;
-            }
-        },
-        // 上传音乐文件
-        uploadMusic() {
-            const formData = new FormData();
-            formData.append('music', this.musicFile.raw);
-            this.$axios({
-                method: 'post',
-                url: '/upload/uploadMusic',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(res => {
-                console.log(res.data);
-                if (res.data.code === 200) {
-                    this.artistAddForm.musicUrl = '/upload/music/' + res.data.obj.filename;
-                    this.musicIsUpload = true;
-                }
-            })
-        },
         // 上传头像文件
         uploadAvatar() {
+            console.log('上传');
             const formData = new FormData();
             formData.append('artist_avatar', this.avatarFile.raw);
             this.$axios({
@@ -148,26 +118,14 @@ export default {
             console.log(file, fileList);
         },
 
-        handleMusicSuccess(file) {
-            console.log(file);
-        },
         beforeAvatarUpload(file) {
             // 验证图片格式
             const isJPG = file.type === 'image/jpeg';
             const isPNG = file.type === 'image/png';
             if (!isJPG && !isPNG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+                this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
             }
-            return isJPG;
-        },
-        beforeMusicUpload(file) {
-            // 验证音乐格式
-            const isMP3 = (file.type === 'audio/mp3') || (file.type === 'audio/mpeg');
-            if (!isMP3) {
-                this.$message.error('上传音乐文件只能是 MP3 格式!');
-            }
-            return isMP3;
-
+            return isJPG || isPNG;
         },
         // 文件删除前钩子
         beforeAvatarRemove(file, fileList) {
