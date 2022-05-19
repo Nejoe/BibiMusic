@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeServer</title>
+    <!-- 引入jquery -->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        #result {
+            width: 200px;
+            height: 100px;
+            border: 1px solid aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" name="account" placeholder="请输入账号">
+    <input type="password" name="password" placeholder="请输入密码">
+    <input id="login" type="submit" value="登录">
+
+    <div id="result"></div>
+    <button type="button" id="btn">发送请求</button><br>
+
+    <input type="text" name="newAccount" placeholder="新账号">
+    <input type="password" name="newPassword" placeholder="输入密码">
+    <input type="text" name="newName" placeholder="新用户名">
+    <input id="register" type="submit" value="注册">
+
+    <script>
+        const btn = document.getElementById('btn');
+        const result = document.getElementById('result');
+        const register = document.getElementById('register');
+        // 设置ajax基本路径
+        const baseUrl = 'http://localhost:3000';
+
+        // 封装一个ajax函数，请求方式、地址、参数、回调函数
+        // get请求参数拼接在地址后面
+        // function ajax(method, url, data, callback) {
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.responseType = 'json';
+        //     xhr.open(method, url);
+        //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        //     xhr.send(data);
+        //     xhr.onreadystatechange = function() {
+        //         if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)) {
+        //             // 将请求回来的数据转换成json格式
+        //             callback(xhr.response);
+        //         }
+        //     }
+        // }
+
+        // // 创建请求对象
+        // const xhr = new XMLHttpRequest();
+        // // 设置请求方式
+        // xhr.open('GET', '/server');
+        // // 发送请求
+        // xhr.send();
+        // // 接收响应,readyState属性的变化
+        // xhr.onreadystatechange = () => {
+        //     // 服务端响应完成
+        //     if (xhr.readyState === 4) {
+        //         // 响应成功
+        //         if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+        //             result.innerHTML = xhr.response;
+        //         }
+        //     }
+        // }
+
+        // login.addEventListener('click', () => {
+        //     const account = document.querySelector('[name="account"]').value;
+        //     const password = document.querySelector('[name="password"]').value;
+        //     ajax('POST', `/user/login`, `account=${account}&password=${password}`, (res) => {
+        //         console.log(res);
+        //         result.innerHTML = res.msg;
+        //     });
+        // });
+        register.addEventListener('click', () => {
+            const newAccount = document.querySelector('input[name="newAccount"]').value;
+            const newPassword = document.querySelector('input[name="newPassword"]').value;
+            const newName = document.querySelector('input[name="newName"]').value;
+            ajax('POST', '/user/register', `newAccount=${newAccount}&newPassword=${newPassword}&newName=${newName}`, (res) => {
+                result.innerHTML = res.msg;
+            });
+        });
+        // jquery登录ajax请求
+        $('#login').click(function() {
+            console.log('点击了登录按钮');
+            $.ajax({
+                url: baseUrl + '/user/login',
+                type: 'post',
+                data: {
+                    account: $('[name="account"]').val(),
+                    password: $('[name="password"]').val()
+                },
+                success: function(res) {
+                    console.log(res);
+                    $('#result').html(res.msg);
+                }
+            });
+        });
+        $('#btn').click(function() {
+            console.log('点击了按钮');
+            $.ajax({
+                url: baseUrl + '/user/server',
+                type: 'get',
+                success: function(res) {
+                    console.log(res);
+                    $('#result').html(res.msg);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
