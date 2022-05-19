@@ -79,8 +79,8 @@
                             </el-table-column>
                             <el-table-column label="操作" :show-overflow-tooltip="true" v-if="is_myPage">
                                 <template slot-scope="scope">
-                                    <el-button type="danger" size="small" @click="handlePlaylistDelete(scope.row.id)"
-                                        plain>
+                                    <el-button v-if="scope.row.user_id===myUserID" type="danger" size="small"
+                                        @click="handlePlaylistDelete(scope.row.id)" plain>
                                         删除
                                     </el-button>
                                 </template>
@@ -213,6 +213,9 @@ export default {
     computed: {
         is_myPage() {
             return parseInt(this.$route.params.id) === this.$store.state.userInfo.id || this.$store.state.userInfo.is_admin === 1;
+        },
+        myUserID() {
+            return this.$store.state.userInfo.id
         }
     },
     methods: {
@@ -504,13 +507,11 @@ export default {
             }
         }
     },
-    mounted() {
+    created() {
         this.getUserInfo();
         this.getUserPageInfo();
         this.getComment();
     },
-
-
 }
 </script>
 

@@ -39,88 +39,6 @@ export default {
       songLimit: 6,
       //歌单列表数据
       playlist: [],
-      playlistTest: [
-        {
-          playlistTitle: "热门歌曲",
-          musicList: [
-            {
-              id: 1,
-              name: "バッグパイパー",
-              cover:
-                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg",
-            },
-            {
-              id: 2,
-              name: "空っぽの空に潰される",
-              cover:
-                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg",
-            },
-            {
-              id: 3,
-              name: "Rap God",
-              cover:
-                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg",
-            },
-            {
-              id: 4,
-              name: "BiBiC HEART",
-              cover:
-                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg",
-            },
-            {
-              id: 5,
-              name: "The 89's Momentum",
-              cover:
-                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg",
-            },
-          ],
-        },
-        {
-          playlistTitle: "纯音乐",
-          musicList: [
-            {
-              id: 1,
-              name: "バッグパイパー",
-              cover:
-                "https://p1.music.126.net/-y3BfZwvRZrI3awBbR8m-w==/1420569023661522.jpg",
-            },
-            {
-              id: 4,
-              name: "BiBiC HEART",
-              cover:
-                "https://p1.music.126.net/eUx3ZA2ww-oz8fVTpRgBGQ==/109951166339020379.jpg",
-            },
-            {
-              id: 5,
-              name: "The 89's Momentum",
-              cover:
-                "https://p2.music.126.net/M_UW-PpjlbF0-9TxlHfUSg==/109951166337486481.jpg",
-            },
-          ],
-        },
-        {
-          playlistTitle: "日语",
-          musicList: [
-            {
-              id: 2,
-              name: "空っぽの空に潰される",
-              cover:
-                "https://p2.music.126.net/OpGFAyxs4qY2U5lfrLwx8w==/109951166200423289.jpg",
-            },
-          ],
-        },
-        {
-          playlistTitle: "欧美",
-          musicList: [
-            {
-              id: 3,
-              name: "Rap God",
-              cover:
-                "https://p1.music.126.net/kkjR8eZGGM1AUYs1_6EGHQ==/109951165378735128.jpg",
-            },
-          ],
-        },
-      ],
     };
   },
   methods: {
@@ -137,21 +55,27 @@ export default {
         params: { id },
       });
     },
+    getDiscoverPlaylist() {
+      // 获取部分歌单来展示
+      this.$axios({
+        url: "/playlist/getDiscoverPlaylist",
+        method: "GET",
+        params: {
+          page: 1,
+          pageSize: 10,
+          songLimit: this.songLimit,
+        },
+      }).then((res) => {
+        this.playlist = res.data.obj;
+        this.loading = false;
+      });
+    }
+  },
+  created() {
+    this.getDiscoverPlaylist();
   },
   mounted() {
-    // 获取部分歌单来展示
-    this.$axios({
-      url: "/playlist/getDiscoverPlaylist",
-      method: "GET",
-      params: {
-        page: 1,
-        pageSize: 10,
-        songLimit: this.songLimit,
-      },
-    }).then((res) => {
-      this.playlist = res.data.obj;
-      this.loading = false;
-    });
+
   },
 };
 </script>

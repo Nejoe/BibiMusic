@@ -602,7 +602,7 @@ export default {
             this.getRandomPlaylist();
         }
     },
-    mounted() {
+    created() {
         this.getPlaylistInfo();
         this.getIsFavorite();
         this.getPlaylistById();
@@ -669,10 +669,6 @@ export default {
     /* align-items: flex-start; */
 }
 
-.commentContent> :nth-child(1) {
-    /* align-self: flex-start; */
-}
-
 .comment-content {
     width: 100%;
     /* height: 50px; */
@@ -721,8 +717,6 @@ export default {
     justify-content: flex-start;
     cursor: pointer;
 }
-
-.card-right {}
 
 .card-right>p:nth-of-type(1) {
     font-size: 20px;

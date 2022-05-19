@@ -254,10 +254,4 @@ export default {
 .login-item {
   align-self: center;
 }
-.el-tabs__content {
-  /* text-align: center; */
-}
-.el-form-item {
-  /* height: 80px; */
-}
 </style>

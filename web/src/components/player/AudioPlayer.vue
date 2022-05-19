@@ -55,27 +55,4 @@ export default {
   /* background-color: #181818 !important; */
 }
 
-.aplayer-lrc:after {
-  /* background: linear-gradient(
-    180deg,
-    hsla(0, 0%, 100%, 0) 0,
-    hsl(0deg 0% 0% / 0%)
-  ) !important; */
-}
-
-.aplayer-lrc:before {
-  /* background: linear-gradient(
-    180deg,
-    #181818 0,
-    hsla(0, 0%, 100%, 0)
-  ) !important; */
-}
-
-.aplayer-title {
-  /* color: white; */
-}
-
-.aplayer-controller .aplayer-time .aplayer-icon .aplayer-fill {
-  /* fill: #fff !important ; */
-}
 </style>

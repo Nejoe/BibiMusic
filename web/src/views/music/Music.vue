@@ -3,7 +3,7 @@
         <el-header>
             <nav-bar></nav-bar>
         </el-header>
-        <el-main>
+        <el-main v-loading="loading">
             <div class="main">
                 <el-row>
                     <div class="musicInfoArea">
@@ -189,6 +189,7 @@ export default {
             }
         };
         return {
+            loading: true,
             currentPage: 1,
             pageSize: 10,
             totalComment: 0,
@@ -559,12 +560,12 @@ export default {
     },
     computed: {
     },
-    mounted() {
-
+    created() {
+        this.loading = true;
         this.getMusicById();
         this.getMusicPlaylist();
-        // 获取评论
         this.getComment();
+        this.loading=false;
     },
 };
 </script>
@@ -573,10 +574,6 @@ export default {
 .musicInfoArea {
     display: flex;
     justify-content: flex-start;
-}
-
-.musicInfoArea>.el-image {
-    /* flex:10 */
 }
 
 .musicInfo {

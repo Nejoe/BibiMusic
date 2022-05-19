@@ -441,7 +441,7 @@ export default {
             this.getComment();
         }
     },
-    mounted() {
+    created() {
         this.getArtistById();
         this.getMusicByArtistId();
         this.getAboutPlaylist();
