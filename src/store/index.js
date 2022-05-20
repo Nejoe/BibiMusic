@@ -91,6 +91,7 @@ export default new Vuex.Store({
                 account: '',
                 name: '',
                 is_admin: 0,
+                avatar: ''
             };
             state.isLogin = false
         },
