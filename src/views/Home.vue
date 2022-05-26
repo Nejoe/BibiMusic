@@ -22,7 +22,7 @@
                         <el-menu-item-group>
                             <template slot="title">创建的歌单<i class="el-icon-plus" style="cursor:pointer"
                                     @click="handleClick"></i></template>
-                            <el-menu-item v-for="item in myPlaylist" :key="item.id" :index="'/playlist/' + item.id">
+                            <el-menu-item style="height:40px !important;line-height:40px !important" v-for="item in myPlaylist" :key="item.id" :index="'/playlist/' + item.id">
                                 <template slot="title" :show-overflow-tooltip="true">
                                     <i class="el-icon-document"></i>
                                     <span slot="title">{{ item.name }}</span>
@@ -30,7 +30,7 @@
                             </el-menu-item>
                         </el-menu-item-group>
                         <el-menu-item-group title="收藏的歌单">
-                            <el-menu-item v-for="item in myFavorite" :key="item.id" :index="'/playlist/' + item.id">
+                            <el-menu-item style="height:40px !important;line-height:40px !important" v-for="item in myFavorite" :key="item.id" :index="'/playlist/' + item.id">
                                 <template slot="title">
                                     <i class="el-icon-document"></i>
                                     <span slot="title">{{ item.name }}</span>
@@ -180,7 +180,9 @@ export default {
     width: 100%;
     height: 60px;
     line-height: 60px;
+    color:#409EFF;
     text-align: center;
+    cursor: pointer;
 }
 
 .el-aside {
@@ -192,6 +194,7 @@ export default {
     /* color: #303133; */
     border-right: 1px solid #E4E7ED;
     /* color: white; */
+    font-weight: bold;
 }
 
 .el-header {

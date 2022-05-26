@@ -81,7 +81,7 @@ const router = new VueRouter({
     // mode: 'history'
 })
 router.beforeEach((to, from, next) => {
-    // 管理端路由守护
+    // 管理页和登录页路由守护
     if (to.name === 'Manage') {
         if (!window.localStorage.getItem('userInfo') || JSON.parse(window.localStorage.getItem('userInfo')).is_admin === 0) {
             router.push('/')

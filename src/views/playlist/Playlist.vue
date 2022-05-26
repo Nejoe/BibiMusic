@@ -162,7 +162,7 @@
                     </el-col>
                     <el-col :span="7">
                         <div class="randomArea">
-                            <h2>随机推荐歌单</h2>
+                            <h2>其他推荐歌单</h2>
                             <el-card :body-style="{ padding: '0px' }" v-for="playlist in randomPlaylist"
                                 :key="playlist.id" shadow="hover" @click.native="goDetail(playlist.id, 'Playlist')">
                                 <img :src="'/api' + playlist.cover" class="image">

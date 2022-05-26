@@ -13,6 +13,9 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* 字体加粗 */
+  /* font-weight:400 */
 }
 #app,
 body,
