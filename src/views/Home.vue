@@ -64,7 +64,6 @@ export default {
     computed: {
         // 我创建的歌单
         myPlaylist() {
-
             return this.playlistData.filter(item => item.user_id === this.$store.state.userInfo.id);
         },
         // 我收藏的歌单
@@ -103,7 +102,7 @@ export default {
                 data: {
                     playlist_name: name,
                     user_id: this.$store.state.userInfo.id,
-                    playlist_cover: 'http://localhost:3000/upload/images/playlist_cover/default.png'
+                    playlist_cover: '/upload/images/playlist_cover/default.png'
                 }
             }).then(res => {
                 if (res.data.code === 200) {
