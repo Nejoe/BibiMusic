@@ -87,7 +87,6 @@ export default {
         },
         // 上传头像文件
         uploadAvatar() {
-            console.log('上传');
             const formData = new FormData();
             formData.append('artist_avatar', this.avatarFile.raw);
             this.$axios({
@@ -98,7 +97,6 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(res => {
-                console.log(res.data);
                 if (res.data.code === 200) {
                     this.artistAddForm.avatarUrl = '/upload/images/artist_avatar/' + res.data.obj.filename;
                     this.avatarIsUpload = true;

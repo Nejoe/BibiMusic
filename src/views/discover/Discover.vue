@@ -62,7 +62,7 @@ export default {
         method: "GET",
         params: {
           page: 1,
-          pageSize: 10,
+          pageSize: 100,
           songLimit: this.songLimit,
         },
       }).then((res) => {

@@ -111,7 +111,7 @@ export default new Vuex.Store({
                     if (!res.data.obj.music.lrc) {
                         res.data.obj.music.lrc = `[00:00.00]纯音乐，请欣赏`
                     }
-                    // 数据库传回是会把\n变为\\n，替换res.data.obj.music.lrc中的\\n为\n
+                    // 数据库传回歌词中的\n会变为\\n，替换res.data.obj.music.lrc中的\\n为\n
                     res.data.obj.music.lrc = res.data.obj.music.lrc.replace(/\\n/g, '\n');
                     //将歌手数组对象转为名字数组，再转为字符串
                     const artistList = res.data.obj.artist.map(item => {
@@ -126,7 +126,6 @@ export default new Vuex.Store({
                         lrc: res.data.obj.music.lrc,
                     };
                     //将response中的数据发送给mutations中的setCurrentSong
-                    // context.commit('addMusic', music);
                     context.commit('setCurrentSong', music);
                 }
             });

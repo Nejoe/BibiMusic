@@ -124,7 +124,8 @@
                                 <h3>最新评论</h3>
                                 <div class="comment" v-for="(comment, index) in comments" :key="index">
                                     <div class="commentHeader">
-                                        <el-avatar shape="square" size="large" :src="'/api' + comment.avatarUrl" :lazy="true">
+                                        <el-avatar shape="square" size="large" :src="'/api' + comment.avatarUrl"
+                                            :lazy="true">
                                         </el-avatar>
                                     </div>
                                     <div class="commentContent">
@@ -312,7 +313,7 @@ export default {
             }).catch(() => { });
         },
         handleMusicDelete(music_id) {
-            this.$confirm('确定删除该歌曲？', '提示', {
+            this.$confirm('确定移除该歌曲？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

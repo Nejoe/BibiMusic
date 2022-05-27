@@ -22,7 +22,8 @@
                         <el-menu-item-group>
                             <template slot="title">创建的歌单<i class="el-icon-plus" style="cursor:pointer"
                                     @click="handleClick"></i></template>
-                            <el-menu-item style="height:40px !important;line-height:40px !important" v-for="item in myPlaylist" :key="item.id" :index="'/playlist/' + item.id">
+                            <el-menu-item style="height:40px !important;line-height:40px !important"
+                                v-for="item in myPlaylist" :key="item.id" :index="'/playlist/' + item.id">
                                 <template slot="title" :show-overflow-tooltip="true">
                                     <i class="el-icon-document"></i>
                                     <span slot="title">{{ item.name }}</span>
@@ -30,7 +31,8 @@
                             </el-menu-item>
                         </el-menu-item-group>
                         <el-menu-item-group title="收藏的歌单">
-                            <el-menu-item style="height:40px !important;line-height:40px !important" v-for="item in myFavorite" :key="item.id" :index="'/playlist/' + item.id">
+                            <el-menu-item style="height:40px !important;line-height:40px !important"
+                                v-for="item in myFavorite" :key="item.id" :index="'/playlist/' + item.id">
                                 <template slot="title">
                                     <i class="el-icon-document"></i>
                                     <span slot="title">{{ item.name }}</span>
@@ -135,12 +137,6 @@ export default {
             }).then((res) => {
                 if (res.data.code === 200) {
                     this.playlistData = res.data.obj;
-                    // 处理playlistData中每个歌单名字过长的问题
-                    this.playlistData.forEach(item => {
-                        if (item.name.length > 8) {
-                            item.name = item.name.slice(0, 8) + '...';
-                        }
-                    });
                 } else {
                     this.$message.error(res.data.msg);
                 }
@@ -180,7 +176,7 @@ export default {
     width: 100%;
     height: 60px;
     line-height: 60px;
-    color:#409EFF;
+    color: #409EFF;
     text-align: center;
     cursor: pointer;
 }
@@ -226,5 +222,8 @@ export default {
 .el-menu-item {
     height: 50px !important;
     line-height: 50px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

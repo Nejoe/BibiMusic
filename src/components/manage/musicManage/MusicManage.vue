@@ -6,7 +6,7 @@
             </el-form-item>
             <el-form-item label="歌手" prop="artistId">
                 <el-select v-model="musicAddForm.artistId" placeholder="请选择歌手" @click.native="getAllArtistName"
-                    clearable>
+                    filterable clearable>
                     <el-option v-for="item in artistList" :key="item.id" :label="item.name" :value="item.id">
                         <div style="display:flex; align-items:center">
                             <el-image :src="'/api' + item.avatar"
@@ -175,7 +175,7 @@ export default {
             // 验证图片格式
             const isJPG = file.type === 'image/jpeg';
             const isPNG = file.type === 'image/png';
-            if (!isJPG&&!isPNG) {
+            if (!isJPG && !isPNG) {
                 this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
             }
             return isJPG || isPNG;
@@ -184,10 +184,10 @@ export default {
             // 验证音乐格式
             const isMP3 = (file.type === 'audio/mp3') || (file.type === 'audio/mpeg');
             const isWAV = file.type === 'audio/wav';
-            if (!isMP3&&!isWAV) {
+            if (!isMP3 && !isWAV) {
                 this.$message.error('上传音乐文件只能是 MP3/WAV 格式!');
                 return false;
-            }else{
+            } else {
                 return true;
             }
         },

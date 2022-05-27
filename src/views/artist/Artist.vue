@@ -27,6 +27,8 @@
                                     }})</el-button>
                                 <el-button icon="el-icon-edit" v-if="$store.state.userInfo.is_admin === 1"
                                     @click="handleEdit">编辑歌手信息</el-button>
+                                <!-- <el-button type="danger" v-if="$store.state.userInfo.is_admin" @click="handleDelete">删除
+                                </el-button> -->
                             </el-button-group>
                         </div>
                     </div>
@@ -56,7 +58,8 @@
                         </div>
                     </el-dialog>
                     <div class="musicListArea">
-                        <el-table :data="musicList" stripe style="width: 100%;margin-top: 20px;">
+                        <el-table v-if="musicList.length" :data="musicList" stripe
+                            style="width: 100%;margin-top: 20px;">
                             <el-table-column width="50px">
                                 <template slot-scope="scope">
                                     <el-button icon="el-icon-caret-right" size="mini"
@@ -80,6 +83,7 @@
                                 <el-link>{{ artistData.artist_name }}</el-link>
                             </el-table-column>
                         </el-table>
+                        <el-empty description="暂无歌曲" v-else></el-empty>
                     </div>
                     <el-col :span="17">
                         <div class="commentArea" ref="comment">
@@ -261,6 +265,15 @@ export default {
             this.fileList = [];
             this.dialogFormVisible = true;
         },
+        // handleDelete() {
+        //     this.$confirm('确定删除该歌手？', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //     }).then(() => {
+        //         this.deleteArtist();
+        //     }).catch(() => { });
+        // },
         // 滑动到评论
         goAnchor(selector) {
             this.$refs[selector].scrollIntoView({
@@ -411,8 +424,32 @@ export default {
                     this.$message.error(res.data.msg);
                 }
             })
-
         },
+        // deleteArtist() {
+        //     this.$axios({
+        //         method: 'post',
+        //         url: '/artist/deleteArtist',
+        //         data: {
+        //             artistId: this.$route.params.id
+        //         }
+        //     }).then(res => {
+        //         if (res.data.code === 200) {
+        //             this.$message({
+        //                 message: res.data.msg,
+        //                 type: 'success'
+        //             });
+        //             this.$router.push({
+        //                 name: 'Home'
+        //             })
+        //         } else {
+        //             this.$message({
+        //                 message: res.data.msg,
+        //                 type: 'error'
+        //             });
+        //         }
+        //     })
+
+        // },
         // 提交表单
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {

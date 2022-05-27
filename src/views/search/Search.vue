@@ -216,7 +216,7 @@ export default {
         params: {
           name: keyword,
           page: 1,
-          pageSize: 10
+          pageSize: 100
         }
       }).then((res) => {
         if (res.data.code === 200) {

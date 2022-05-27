@@ -32,6 +32,8 @@
                                     @click="handleEdit">
                                     编辑歌曲信息
                                 </el-button>
+                                <el-button type="danger" v-if="$store.state.userInfo.is_admin" @click="handleDelete">删除
+                                </el-button>
                             </el-button-group>
                         </div>
                     </div>
@@ -65,7 +67,7 @@
                                 <el-input v-model="musicAddForm.musicName" placeholder="请输入歌曲名称"></el-input>
                             </el-form-item>
                             <el-form-item label="歌手" prop="artistId">
-                                <el-select v-model="musicAddForm.artistId" placeholder="请选择歌手"
+                                <el-select v-model="musicAddForm.artistId" placeholder="请选择歌手" filterable
                                     @click.native="getAllArtistName">
                                     <el-option v-for="item in artistList" :key="item.id" :label="item.name"
                                         :value="item.id">
@@ -346,7 +348,11 @@ export default {
             }
         },
         handleAdd() {
-            this.getUserPageInfo();
+            if(this.$store.state.isLogin) {
+                this.getUserPageInfo();
+            } else {
+                this.$message.error('请先登录！');
+            }
         },
         handleEdit() {
             // 赋值给表单
@@ -359,6 +365,15 @@ export default {
                 coverUrl: this.musicData.music.cover,
             }
             this.dialogFormVisible = true;
+        },
+        handleDelete() {
+            this.$confirm('确定删除该歌曲？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.deleteMusic();
+            }).catch(() => { });
         },
         // 滑动到评论
         goAnchor(selector) {
@@ -408,6 +423,30 @@ export default {
                     });
                     this.getMusicById();
                     this.dialogFormVisible = false;
+                } else {
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
+        deleteMusic() {
+            this.$axios({
+                method: 'post',
+                url: '/music/deleteMusic',
+                data: {
+                    musicId: this.$route.params.id
+                }
+            }).then(res => {
+                if (res.data.code === 200) {
+                    this.$message({
+                        message: res.data.msg,
+                        type: 'success'
+                    });
+                    this.$router.push({
+                        name: 'Home'
+                    })
                 } else {
                     this.$message({
                         message: res.data.msg,
@@ -519,7 +558,14 @@ export default {
                 },
             }).then((res) => {
                 if (res.data.code === 200) {
-                    this.musicData = res.data.obj;
+                    if (typeof (res.data.obj.music) === 'undefined') {
+                        this.$message.error("歌曲不存在");
+                        this.$router.push({
+                            name: 'Home'
+                        })
+                    } else {
+                        this.musicData = res.data.obj;
+                    }
                 } else {
                     this.$message.error(res.data.msg);
                 }
@@ -551,6 +597,7 @@ export default {
                 },
             }).then((res) => {
                 if (res.data.code === 200) {
+                    this.myPlaylistData=[]
                     // 循环提取出我的歌单
                     res.data.obj.forEach((item) => {
                         if (item.user_id === this.$store.state.userInfo.id) {
